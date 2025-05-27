@@ -1,0 +1,34 @@
+{
+    "name": "dell/cfms",
+    "description": "Course Feedback Management System",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Dell\\Cfms\\": "CFMS/src/",
+            "Cfms\\Services\\": "CFMS/src/Services",
+            "Cfms\\Controllers\\": "CFMS/src/Controllers",
+            "Cfms\\Models\\": "CFMS/src//Models",
+            "Cfms\\Repositories\\": "CFMS/src/Repositories",
+            "Cfms\\Interface\\": "CFMS/src/Interface",
+            "Cfms\\": "CFMS/src/",
+            "Cfms\\Core\\": "CFMS/src/Core"  
+        },
+        "classmap": [
+            "CFMS/src/Services",
+            "CFMS/src/Controllers",
+            "CFMS/src//Models",
+            "CFMS/src/Repositories",
+            "CFMS/src/Interface",
+            "CFMS/src/Core"
+
+        ]
+    },
+    "authors": [
+        {
+            "name": "Isabella",
+            "email": "abiolaisabella@gmail.com"
+        }
+    ],
+    "require": {}
+}
