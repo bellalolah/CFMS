@@ -6,21 +6,19 @@
     "autoload": {
         "psr-4": {
             "Dell\\Cfms\\": "CFMS/src/",
+            "Cfms\\Models\\": "CFMS/src/Models",
+            "Cfms\\Repositories\\": "CFMS/src/Repositories",
             "Cfms\\Services\\": "CFMS/src/Services",
             "Cfms\\Controllers\\": "CFMS/src/Controllers",
-            "Cfms\\Models\\": "CFMS/src//Models",
-            "Cfms\\Repositories\\": "CFMS/src/Repositories",
-            "Cfms\\Interface\\": "CFMS/src/Interface",
             "Cfms\\": "CFMS/src/",
-            "Cfms\\Core\\": "CFMS/src/Core"  
+            "Cfms\\Core\\": "CFMS/src/Config"  
         },
         "classmap": [
+            "CFMS/src/Models",
+            "CFMS/src/Repositories",
             "CFMS/src/Services",
             "CFMS/src/Controllers",
-            "CFMS/src//Models",
-            "CFMS/src/Repositories",
-            "CFMS/src/Interface",
-            "CFMS/src/Core"
+            "CFMS/src/Config"
 
         ]
     },
