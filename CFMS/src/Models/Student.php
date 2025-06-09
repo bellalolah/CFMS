@@ -2,7 +2,8 @@
 
 namespace Cfms\Models;
 
-class StudentModel{
+class Student
+{
 
     public $var ;
 }

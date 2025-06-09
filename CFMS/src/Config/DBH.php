@@ -1,6 +1,6 @@
 <?php
 
-namespace Cfms\config;
+namespace Cfms\Core;
 
 use PDO;
 use PDOException;
