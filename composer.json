@@ -11,7 +11,9 @@
             "Cfms\\Services\\": "CFMS/src/Services",
             "Cfms\\Controllers\\": "CFMS/src/Controllers",
             "Cfms\\": "CFMS/src/",
-            "Cfms\\Core\\": "CFMS/src/Config"  
+            "Cfms\\Core\\": "CFMS/src/Core" ,
+            "Cfms\\Interface\\": "CFMS/src/Interface", 
+            "Cfms\\Response\\": "CFMS/src/Responsse"  
         },
         "classmap": [
             "CFMS/src/Models",

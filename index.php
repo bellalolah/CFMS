@@ -1,4 +1,16 @@
 <?php
+// CORS headers for React frontend
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+// Handle preflight request early
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 // session cookie config before session start
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
