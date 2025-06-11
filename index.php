@@ -1,4 +1,5 @@
 <?php
+
 // CORS headers for React frontend
 header("Access-Control-Allow-Origin: http://localhost:3000");
 header("Access-Control-Allow-Credentials: true");
@@ -14,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // session cookie config before session start
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 
 session_set_cookie_params([
     'lifetime' => 1800,      // 30 minutes session lifetime
@@ -39,7 +44,7 @@ $route = new Router();
 
 // Define routes - example (adjust controllers & methods)
 $route->get('/', ["Cfms\Controllers\AuthController", "loginPage"]);
-$route->post('/login', [AuthController::class, "login"]);
+$route->post('/login', ["Cfms\Controllers\AuthController", "login"]);
 $route->get('/dashboard', ["Cfms\Controllers\DashboardController", "index"]);
 $route->post('/logout', ["Cfms\Controllers\AuthController", "logoutUser"]);
 $route->get('/feedback', ["Cfms\Controllers\FeedbackController", "listFeedback"]);

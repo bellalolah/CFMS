@@ -48,7 +48,10 @@ class Router
     $path = $this->normalizePath($original_path);
     $method = strtoupper($_SERVER['REQUEST_METHOD']);
 
+    error_log("Method: $method, Path: $path"); // 👈 Add this
+
     foreach ($this->routes as $route) {
+        error_log("Checking route: " . $route['method'] . " " . $route['path']); // 👈 Debug
         if (preg_match("#^{$route['path']}$#", $path) && $route['method'] === $method) {
             [$class, $function] = $route['controller'];
 
@@ -66,10 +69,10 @@ class Router
             return;
         }
     }
-    
-    // Load error controller if no route matches
+
     $this->loadErrorPage();
 }
+
 
 private function loadErrorPage()
 {
