@@ -21,6 +21,18 @@ class LecturerRepository extends BaseRepository
 
         return $lecturerList;
     }
+    public function findByEmail(string $email): ?Lecturer
+    {
+        // Use the new findByColumn method
+        $lecturerRecords = $this->findByColumn($this->table, 'email', $email);
+
+        if (!empty($lecturerRecords)) {
+            $lecturer = new Lecturer();
+            return $lecturer->toModel((object)$lecturerRecords[0]); // Return the first result
+        }
+
+        return null;
+    }
 
     // Retrieve a specific lecturer by ID
     public function getLecturerById($id): ?Lecturer

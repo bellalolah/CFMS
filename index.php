@@ -28,23 +28,22 @@ session_start();
 // Autoload classes (adjust path as needed)
 require_once __DIR__ . '/vendor/autoload.php';
 
-
-require_once __DIR__ . './cfms/src/Config/session.php';
+require_once __DIR__ . '/cfms/src/Config/session.php';
 
 
 
 // Use your Router class (adjust namespace to your CFMS project)
-use CFMS\Core\Router;
+use Cfms\Core\Router;
 
 $route = new Router();
 
 // Define routes - example (adjust controllers & methods)
-$route->get('/', ["CFMS\Controller\AuthController", "loginPage"]);
-$route->post('/login', ["CFMS\Controller\AuthController", "loginUser"]);
-$route->get('/dashboard', ["CFMS\Controller\DashboardController", "index"]);
-$route->post('/logout', ["CFMS\Controller\AuthController", "logoutUser"]);
-$route->get('/feedback', ["CFMS\Controller\FeedbackController", "listFeedback"]);
-$route->post('/feedback/submit', ["CFMS\Controller\FeedbackController", "submitFeedback"]);
+$route->get('/', ["Cfms\Controllers\AuthController", "loginPage"]);
+$route->post('/login', [AuthController::class, "login"]);
+$route->get('/dashboard', ["Cfms\Controllers\DashboardController", "index"]);
+$route->post('/logout', ["Cfms\Controllers\AuthController", "logoutUser"]);
+$route->get('/feedback', ["Cfms\Controllers\FeedbackController", "listFeedback"]);
+$route->post('/feedback/submit', ["Cfms\Controllers\FeedbackController", "submitFeedback"]);
 
 // Dispatch routes
 $route->dispatch();

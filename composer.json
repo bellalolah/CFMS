@@ -13,7 +13,7 @@
             "Cfms\\": "CFMS/src/",
             "Cfms\\Core\\": "CFMS/src/Core" ,
             "Cfms\\Interface\\": "CFMS/src/Interface", 
-            "Cfms\\Response\\": "CFMS/src/Responsse"  
+            "Cfms\\Response\\": "CFMS/src/Response"  
         },
         "classmap": [
             "CFMS/src/Models",

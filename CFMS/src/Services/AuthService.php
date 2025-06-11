@@ -1,15 +1,15 @@
 <?php
-namespace Cfms\Service;
+namespace Cfms\Services;
 
-use Cfms\Repository\StudentRepository;
-use Cfms\Repository\LecturerRepository;
-use Cfms\Repository\AdminRepository;
+use Cfms\Repositories\StudentRepository;
+use Cfms\Repositories\LecturerRepository;
+use Cfms\Repositories\AdminRepository;
 
 class AuthService
 {
-    private $studentRepo;
-    private $lecturerRepo;
-    private $adminRepo;
+    private StudentRepository $studentRepo;
+    private LecturerRepository $lecturerRepo;
+    private AdminRepository $adminRepo;
 
     public function __construct()
     {
@@ -18,31 +18,62 @@ class AuthService
         $this->adminRepo = new AdminRepository();
     }
 
-    public function authenticate(string $role, string $username, string $password)
+    public function authenticate(array $input): array
     {
-        $user = null;
+        $role = $input['role'] ?? null;
 
-        switch ($role) {
-            case 'student':
-                $user = $this->studentRepo->findByMatricNumber($username);
-                break;
-            case 'lecturer':
-                $user = $this->lecturerRepo->findByEmail($username);
-                break;
-            case 'admin':
-                $user = $this->adminRepo->findByEmail($username);
-                break;
-            default:
-                return null;
+        if ($role === 'student') {
+            $matric = $input['matric_number'] ?? '';
+            $password = $input['password'] ?? '';
+
+            $student = $this->studentRepo->findByMatric($matric);
+            if (!$student || !password_verify($password, $student->password)) {
+                return ['success' => false, 'message' => 'Invalid matric number or password'];
+            }
+
+            $_SESSION['user'] = [
+                'id' => $student->id,
+                'matric_number' => $student->matric_number,
+                'role' => 'student'
+            ];
+            return ['success' => true, 'user' => $_SESSION['user']];
         }
 
-        if (!$user) return null;
+        if ($role === 'lecturer') {
+            $email = $input['email'] ?? '';
+            $password = $input['password'] ?? '';
 
-        // Verify password using password_verify if hashed, or simple == if plain text (not recommended)
-        if (password_verify($password, $user->password_hash)) {
-            return $user;
+            $lecturer = $this->lecturerRepo->findByEmail($email);
+            if (!$lecturer || !password_verify($password, $lecturer->password)) {
+                return ['success' => false, 'message' => 'Invalid email or password'];
+            }
+
+            $_SESSION['user'] = [
+                'id' => $lecturer->id,
+                'email' => $lecturer->email,
+                'role' => 'lecturer'
+            ];
+            return ['success' => true, 'user' => $_SESSION['user']];
         }
 
-        return null;
+        if ($role === 'admin') {
+            $email = $input['email'] ?? '';
+            $password = $input['password'] ?? '';
+
+            $admin = $this->adminRepo->findByEmail($email);
+            if (!$admin || !password_verify($password, $admin->password)) {
+                return ['success' => false, 'message' => 'Invalid email or password'];
+            }
+
+            $_SESSION['user'] = [
+                'id' => $admin->id,
+                'email' => $admin->email,
+                'role' => 'admin',
+                'admin_type' => $admin->role,
+            ];
+            return ['success' => true, 'user' => $_SESSION['user']];
+        }
+
+        return ['success' => false, 'message' => 'Invalid role specified'];
     }
 }

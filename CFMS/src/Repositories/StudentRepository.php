@@ -30,6 +30,18 @@ class StudentRepository extends BaseRepository{
 
         return null;
     }
+    public function findbyMatric(string $matric_number): ?Lecturer
+    {
+        // Use the new findByColumn method
+        $studentRecords = $this->findByColumn($this->table, 'matric_number', $matric_number);
+
+        if (!empty($studentRecords)) {
+            $student = new Student();
+            return $lecturer->toModel((object)$studentRecords[0]); // Return the first result
+        }
+
+        return null;
+    }
 
     // Create a new student record in the database and return the created student object
     public function createStudent(Student $studentData): ?Student
