@@ -2,36 +2,32 @@
 
 namespace Cfms\Models;
 
-class Course implements Models
+class Course
 {
-    public $id;
-    public $course_code;
-    public $title;
-    public $department_id;
-    public $level;
+    public int $id;
+    public string $course_code;
+    public string $course_title;
+    public int $department_id;
+    public int $level;
+    
 
-    public static function toModel($data): Models {
-        $model = new self();
-        $model->id = $data->id ?? null;
-        $model->course_code = $data->course_code ?? null;
-        $model->title = $data->title ?? null;
-        $model->department_id = $data->department_id ?? null;
-        $model->level = $data->level ?? null;
-        return $model;
+    public function toModel(object $data): self
+    {
+        $this->id = $data->id;
+        $this->course_code = $data->course_code;
+        $this->course_title = $data->course_title;
+        $this->department_id = $data->department_id;
+        $this->level = $data->level;
+        return $this;
     }
 
-    public function getModel($data): Models {
-        $this->validateData($data);
-        $model = new self();
-        $model->course_code = $data->course_code ?? null;
-        $model->title = $data->title ?? null;
-        $model->department_id = $data->department_id ?? null;
-        $model->level = $data->level ?? null;
-        return $model;
-    }
-
-    private function validateData($data) {
-        if (empty($data->course_code)) throw new \InvalidArgumentException("Course code is required.");
-        if (empty($data->title)) throw new \InvalidArgumentException("Course title is required.");
+    public function getModel(object $data): array
+    {
+        return [
+            'course_code' => $data->course_code,
+            'course_title' => $data->course_title,
+            'department_id' => $data->department_id,
+            'level' => $data->level,
+        ];
     }
 }

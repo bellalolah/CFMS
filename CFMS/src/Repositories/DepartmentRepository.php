@@ -2,53 +2,48 @@
 
 namespace Cfms\Repositories;
 
-use Cfms\Models\Faculty;
+use Cfms\Models\Department;
 
-class FacultyRepository extends BaseRepository
+class DepartmentRepository extends BaseRepository
 {
-    protected $table = 'faculties';
+    protected $table = 'departments';
 
-    // Retrieve all faculties
-    public function getAllFaculties(): array
+    // Get all departments and map them to Department model
+    public function getAllDepartments(): array
     {
-        $facultyRecords = $this->findAll($this->table);
-        $facultyList = [];
+        $departmentRecords = $this->findAll($this->table);
+        $departmentList = [];
 
-        foreach ($facultyRecords as $facultyData) {
-            $faculty = new Faculty();
-            $facultyList[] = $faculty->toModel((object)$facultyData);
+        foreach ($departmentRecords as $deptData) {
+            $department = new Department();
+            $departmentList[] = $department->toModel((object) $deptData);
         }
 
-        return $facultyList;
+        return $departmentList;
     }
 
-    // Retrieve a specific faculty by ID
-    public function getFacultyById($id): ?Faculty
+    // Get a specific department by ID
+    public function getDepartmentById($id): ?Department
     {
-        $facultyData = $this->findById($this->table, $id);
-        if ($facultyData) {
-            $faculty = new Faculty();
-            return $faculty->toModel((object)$facultyData);
+        $departmentData = $this->findById($this->table, $id);
+        if ($departmentData) {
+            $department = new Department();
+            return $department->toModel((object) $departmentData);
         }
 
         return null;
     }
 
-    // Create a new faculty record
-    public function createFaculty(Faculty $facultyData): ?Faculty
+    // Create a new department (if needed)
+    public function createDepartment(Department $department): ?Department
     {
         $insert_data = [
-            'name' => $facultyData->name,
-            'code' => $facultyData->code
+            'name' => $department->name,
+            'faculty_id' => $department->faculty_id,
         ];
 
-        $facultyData->id = $this->insert($this->table, $insert_data);
+        $department->id = $this->insert($this->table, $insert_data);
 
-        if ($facultyData->id) {
-            $faculty = new Faculty();
-            return $faculty->getModel((object)$facultyData);
-        }
-
-        return null;
+        return $department->id ? $department->getModel((object) $department) : null;
     }
 }

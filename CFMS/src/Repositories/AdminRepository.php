@@ -74,4 +74,6 @@ class AdminRepository extends BaseRepository
             return password_hash($pwd, PASSWORD_BCRYPT, $options);
         }
     }
+    
 }
+
