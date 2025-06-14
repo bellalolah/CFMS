@@ -2,37 +2,36 @@
 
 namespace Cfms\Models;
 
+use Cfms\Interface\Models;
+
 class Questionnaire implements Models
 {
-    public $id;
-    public $course_id;
-    public $lecturer_id;
-    public $title;
-    public $status;
+    public ?int $id = null;
+    public string $title;
+    public int $course_offering_id;
+    public string $status = 'draft'; // draft | active | closed
+    public int $feedback_round = 1;
+    
+    public static function toModel(array $data): Questionnaire
+    {
+        $q = new Questionnaire();
+        $q->id = (int) $data['id'];
+        $q->title = $data['title'];
+        $q->course_offering_id = (int) $data['course_offering_id'];
+        $q->status = $data['status'];
+        $q->feedback_round = (int) $data['feedback_round'];
+        
 
-    public static function toModel($data): Models {
-        $questionnaireModel = new self();
-        $questionnaireModel->id = $data->id ?? null;
-        $questionnaireModel->course_id = $data->course_id ?? null;
-        $questionnaireModel->lecturer_id = $data->lecturer_id ?? null;
-        $questionnaireModel->title = $data->title ?? null;
-        $questionnaireModel->status = $data->status ?? null;
-        return $questionnaireModel;
+        return $q;
     }
 
-    public function getModel($data): Models {
-        $this->validateData($data);
-        $questionnaireModel = new self();
-        $questionnaireModel->course_id = $data->course_id ?? null;
-        $questionnaireModel->lecturer_id = $data->lecturer_id ?? null;
-        $questionnaireModel->title = $data->title ?? null;
-        $questionnaireModel->status = $data->status ?? 'active';
-        return $questionnaireModel;
-    }
-
-    private function validateData($data) {
-        if (empty($data->course_id)) throw new \InvalidArgumentException("Course ID is required.");
-        if (empty($data->lecturer_id)) throw new \InvalidArgumentException("Lecturer ID is required.");
-        if (empty($data->title)) throw new \InvalidArgumentException("Title is required.");
+    public function getModel(): array
+    {
+        return [
+            'title' => $this->title,
+            'course_offering_id' => $this->course_offering_id,
+            'status' => $this->status,
+            'feedback_round' => $this->feedback_round,
+        ];
     }
 }
