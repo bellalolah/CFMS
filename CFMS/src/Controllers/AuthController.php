@@ -1,57 +1,37 @@
 <?php
+
 namespace Cfms\Controllers;
 
 use Cfms\Services\AuthService;
-
+use Cfms\Utils\JsonResponse;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AuthController extends BaseController
 {
-    private $authService;
-
-    public function __construct()
+    // The constructor now requires an AuthService instance.
+    // We use the same clean "constructor property promotion" syntax.
+    public function __construct(private AuthService $authService)
     {
-        $this->authService = new AuthService();
-       
-    }
-    public function register()
-    {
-        // Get JSON input
-        $input = json_decode(file_get_contents("php://input"));
-
-        $service = new AuthService();
-        $response = $service->register($input);
-
-        JsonResponse::send($response, 201); // Respond as JSON
+        // The body is empty. PHP automatically assigns $this->authService.
     }
 
-    public function loginPage()
-{
-    echo json_encode(['message' => 'Login page placeholder']);
+    public function login(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        // This line now works perfectly because $this->authService is guaranteed to be set.
+        $result = $this->authService->authenticate($data);
+
+        return JsonResponse::withJson($response, $result, $result['success'] ? 200 : 401);
+    }
+
+    public function register(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+
+        $result = $this->authService->registerUser($data);
+
+        return JsonResponse::withJson($response, $result, $result['success'] ? 200 : 401);
+    }
 }
-
-    public function login()
-    {
-        $this->requirePost();
-        $input = $this->getJsonInput();
-
-        $result = $this->authService->authenticate($input);
-        if (!$result['success']) {
-            return $this->jsonResponse(['success' => false, 'message' => $result['message']], 401);
-        }
-
-        return $this->jsonResponse([
-            'success' => true,
-            'user' => $result['user']
-        ]);
-    }
-     public function logout()
-    {
-        session_start();
-        session_destroy();
-        echo json_encode(['success' => true]);
-    }
-
-}
-
-
-   

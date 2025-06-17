@@ -3,16 +3,16 @@
 namespace Cfms\Repositories;
 
 use PDO;
-use Cfms\Core\Dbh;
+use Cfms\Core\DBH;
 
 
-abstract class BaseRepository extends Dbh
+abstract class BaseRepository extends DBH
 {
     protected $db;
 
     public function __construct()
     {
-        $this->db = (new Dbh())->connect(); // Create a new instance of Dbh and connect
+        $this->db = (new DBH())->connect(); // Create a new instance of Dbh and connect
     }
 
     public function findById(string $table, int $id)
@@ -46,6 +46,10 @@ abstract class BaseRepository extends Dbh
 
     public function insert(string $table, array $data): int
     {
+        if (empty($data)) {
+            throw new \InvalidArgumentException("Insert data array cannot be empty.");
+        }
+
         $fields = implode(", ", array_keys($data));
         $placeholders = ":" . implode(", :", array_keys($data));
 
@@ -90,4 +94,24 @@ abstract class BaseRepository extends Dbh
 
         return $stmt->execute();
     }
+
+    public function updateByColumn(string $table, string $column, $value, array $data): bool
+    {
+        $fields = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($data)));
+
+        $sql = "UPDATE {$table} SET {$fields} WHERE {$column} = :column_value";
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($data as $key => $val) {
+            if (is_array($val)) {
+                throw new \InvalidArgumentException("Value for $key cannot be an array.");
+            }
+            $stmt->bindValue(":$key", $val);
+        }
+
+        $stmt->bindValue(':column_value', $value);
+
+        return $stmt->execute();
+    }
+
 }

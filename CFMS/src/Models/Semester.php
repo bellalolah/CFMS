@@ -17,7 +17,7 @@ class Semester
         $this->id = (int) $data->id;
         $this->name = $data->name;
         $this->session_id = (int) $data->session_id;
-        $this->status = $data->status;
+        $this->status = $data->status ?? 'open';
         $this->start_date = $data->start_date ?? null;
         $this->end_date = $data->end_date ?? null;
 

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="update">
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Config/DataInitializer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Controllers/DepartmentController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Controllers/FacultyController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/DepartmentWithCoursesDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/FacultyWithDepartmentsDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Middlewares/JsonErrorRenderer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Middlewares/JwtAuthMiddleware.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/LecturerProfile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/Role.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/StudentProfile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/User.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/RoleRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/UserRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/user_profile/LecturerProfileRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/user_profile/StudentProfileRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/auth.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/departments.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/faculties.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/health.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/DepartmentService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/FacultyService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/ProfileService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/JsonResponse.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/JwtSessionGenerator.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/PasswordUtil.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bootstrap.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/globals.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Config/session.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/AdminController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Controllers/AuthController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Core/DBH.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Core/DBH.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Core/Router.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Interface/InterfaceModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Interface/Model.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Admin.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Course.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Course.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/CourseOffering.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/CourseOffering.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Department.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Department.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Faculty.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Faculty.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Feedback.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Feedback.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Lecturer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Questionnaire.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Questionnaire.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Questions.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Questions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Semester.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Semester.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Session.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Session.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Student.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/AdminRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CourseOfferingRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CourseRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/LecturerRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/SemesterRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/SessionRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/StudentRepository.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Response/JsonResponse.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/AdminService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/AuthService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/AuthService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CourseOfferingService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CourseService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/SemesterService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/SessionService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution>
+      <executable path="composer" />
+    </execution>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;justme8code&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bellalolah/CFMS&quot;,
+    &quot;accountId&quot;: &quot;0cb2bc00-38d3-451d-b70a-f34f22eb3b0b&quot;
+  }
+}</component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/vendor/slim/slim" />
+      <path value="$PROJECT_DIR$/vendor/slim/psr7" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-server-middleware" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-server-handler" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/vendor/php-di/invoker" />
+      <path value="$PROJECT_DIR$/vendor/laravel/serializable-closure" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2yVD9kB9DraRQ9Fym0epe8qgRDl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;database.data.extractors.current.id&quot;: &quot;Comma-separated (CSV)_id&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/thompson/PhpstormProjects/CFMS/CFMS/src/Routes&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CFMS/src/Routes" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-PS-251.26094.133" />
+        <option value="bundled-php-predefined-a98d8de5180a-c5828cf854d9-com.jetbrains.php.sharedIndexes-PS-251.26094.133" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="" />
+      <created>1749910697554</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749910697554</updated>
+      <workItem from="1749910698797" duration="10285000" />
+      <workItem from="1749952213891" duration="5663000" />
+      <workItem from="1749958512101" duration="14108000" />
+      <workItem from="1750008425934" duration="44778000" />
+      <workItem from="1750105187068" duration="16506000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
+  </component>
+</project>

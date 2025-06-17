@@ -13,14 +13,24 @@
             "Cfms\\": "CFMS/src/",
             "Cfms\\Core\\": "CFMS/src/Core" ,
             "Cfms\\Interface\\": "CFMS/src/Interface", 
-            "Cfms\\Response\\": "CFMS/src/Response"  
+            "Cfms\\Response\\": "CFMS/src/Response",
+            "Cfms\\Config\\": "CFMS/src/Config",
+            "Cfms\\Middlewares\\": "CFMS/src/Middlewares",
+            "Cfms\\Routes\\": "CFMS/src/Routes",
+            "Cfms\\Utils\\": "CFMS/src/Utils",
+            "Cfms\\Dto\\": "CFMS/src/Dto"
         },
         "classmap": [
             "CFMS/src/Models",
             "CFMS/src/Repositories",
             "CFMS/src/Services",
             "CFMS/src/Controllers",
-            "CFMS/src/Config"
+            "CFMS/src/Config",
+            "CFMS/src/Middlewares",
+            "CFMS/src/Routes",
+            "CFMS/src/Utils",
+            "CFMS/src/Core",
+            "CFMS/src/Dto"
 
         ]
     },
@@ -33,6 +43,8 @@
     "require": {
         "slim/slim": "^4.14",
         "slim/psr7": "^1.7",
-        "firebase/php-jwt": "^6.11"
+        "firebase/php-jwt": "^6.11",
+      "ext-pdo": "*",
+        "php-di/php-di": "^7.0"
     }
 }

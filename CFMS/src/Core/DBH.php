@@ -5,11 +5,11 @@ namespace Cfms\Core;
 use PDO;
 use PDOException;
 
-class Dbh
+class DBH
 {
-    private $dsn = "mysql:host=localhost;dbname=cfms";
+    private $dsn = "mysql:host=localhost:3306;dbname=cfms";
     private $dbusername = "root";
-    private $dbpassword = "";
+    private $dbpassword = "cfmsRoot_Dev2025";
 
     protected function connect()
     {
@@ -18,7 +18,7 @@ class Dbh
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+            throw new \Cfms\Core\DatabaseConnectionException('Could not connect to the database.', 0, $e);
         }
     }
 }

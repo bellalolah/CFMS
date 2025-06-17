@@ -1,54 +1,91 @@
 <?php
 
-// CORS headers for React frontend
-header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Credentials: true");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
-// Handle preflight request early
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-// session cookie config before session start
-ini_set('session.use_only_cookies', 1);
-ini_set('session.use_strict_mode', 1);
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+use Cfms\Middlewares\JsonErrorRenderer;
+use Slim\Factory\AppFactory;
 
 
-session_set_cookie_params([
-    'lifetime' => 1800,      // 30 minutes session lifetime
-    'domain' => 'localhost', // change this if deploying
-    'path' => '/',
-    'secure' => false,       // set true if using https
-    'httponly' => true
-]);
-
-session_start();
-
-// Autoload classes (adjust path as needed)
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
 
-require_once __DIR__ . '/cfms/src/Config/session.php';
+// Create Container using PHP-DI
+$container = new \DI\Container();
+(require __DIR__ . '/di-container.php')($container);
+AppFactory::setContainer($container);
+
+// --App & MIDDLEWARE SETUP ---
+$app = AppFactory::create();
 
 
+// CORS Middlewares
 
-// Use your Router class (adjust namespace to your CFMS project)
-use Cfms\Core\Router;
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+        ->withHeader('Access-Control-Allow-Credentials', 'true');
+});
 
-$route = new Router();
+// The routing Middlewares should be added before any Routes are defined
+// it determines which route is being called.
+$app->addRoutingMiddleware();
 
-// Define routes - example (adjust controllers & methods)
-$route->get('/', ["Cfms\Controllers\AuthController", "loginPage"]);
-$route->post('/login', ["Cfms\Controllers\AuthController", "login"]);
-$route->get('/dashboard', ["Cfms\Controllers\DashboardController", "index"]);
-$route->post('/logout', ["Cfms\Controllers\AuthController", "logoutUser"]);
-$route->get('/feedback', ["Cfms\Controllers\FeedbackController", "listFeedback"]);
-$route->post('/feedback/submit', ["Cfms\Controllers\FeedbackController", "submitFeedback"]);
+// The body parsing middleware.
+// This should be added before the error middleware so that the error handler
+// can get access to the parsed body if it needs to.
+$app->addBodyParsingMiddleware();
 
-// Dispatch routes
-$route->dispatch();
+// The body parsing middleware.
+// This should be added before the error middleware so that the error
+// handler can get access to the parsed body if it needs to.
+
+// -- REGISTER ROUTES FROM SEPARATE FILES ---
+$authRoutes = require __DIR__ . '/CFMS/src/Routes/auth.php';
+$authRoutes($app);
+
+$healthRoutes = require __DIR__ . '/CFMS/src/Routes/health.php';
+$healthRoutes($app);
+
+$departmentRoutes = require __DIR__ . '/CFMS/src/Routes/departments.php';
+$departmentRoutes($app);
+
+$facultyRoutes = require __DIR__ . '/CFMS/src/Routes/faculties.php';
+$facultyRoutes($app);
+
+$studentProfileRoutes = require __DIR__ . '/CFMS/src/Routes/student_profiles.php';
+$studentProfileRoutes($app);
+
+$lecturerProfileRoutes = require __DIR__ . '/CFMS/src/Routes/lecturer_profiles.php';
+$lecturerProfileRoutes($app);
+
+$courseRoutes = require __DIR__ . '/CFMS/src/Routes/course.php';
+$courseRoutes($app);
+
+$lecturerCoursesRoutes = require __DIR__ . '/CFMS/src/Routes/lecturer_courses.php';
+$lecturerCoursesRoutes($app);
+
+$courseOfferingRoutes = require __DIR__ . '/CFMS/src/Routes/course_offerings.php';
+$courseOfferingRoutes($app);
+
+$userRoutes = require __DIR__ . '/CFMS/src/Routes/users.php';
+$userRoutes($app);
+
+/*$semesterRoutes = require __DIR__ . '/CFMS/src/Routes/semester.php';
+$semesterRoutes($app);*/
+
+$sessionRoutes = require __DIR__ . '/CFMS/src/Routes/session.php';
+$sessionRoutes($app);
+
+
+// The error middleware should be added last.
+// It will catch exceptions from all middleware and Routes defined before it.
+
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$errorHandler = $errorMiddleware->getDefaultErrorHandler();
+$errorHandler->forceContentType('application/json');
+$errorHandler->registerErrorRenderer('application/json', JsonErrorRenderer::class);
+
+// -- RUN THE APP --
+$app->run();

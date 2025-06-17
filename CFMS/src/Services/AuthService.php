@@ -1,79 +1,121 @@
 <?php
+
 namespace Cfms\Services;
 
-use Cfms\Repositories\StudentRepository;
-use Cfms\Repositories\LecturerRepository;
-use Cfms\Repositories\AdminRepository;
+
+use Cfms\Models\User;
+use Cfms\Repositories\RoleRepository;
+use Cfms\Repositories\UserRepository;
+use Cfms\Utils\JwtSessionGenerator;
+use Cfms\Utils\PasswordUtil;
+use Cfms\Dto\UserWithProfileDto;
+use Cfms\Dto\UserLoginDto;
+use Cfms\Services\UserService;
 
 class AuthService
 {
-    private StudentRepository $studentRepo;
-    private LecturerRepository $lecturerRepo;
-    private AdminRepository $adminRepo;
 
-    public function __construct()
+    // Constructor Injection, just like in Spring!
+    // The 'private' keyword automatically creates and assigns the properties for you.
+    public function __construct(
+        private UserRepository $userRepo,
+        private RoleRepository $roleRepo,
+        private UserService $userService
+    ) {
+        // The constructor body can be empty!
+        // PHP automatically does the equivalent of:
+        // $this->userRepo = $userRepo;
+        // ...and so on.
+    }
+
+    // register as a student, lecturer.
+
+
+    public function registerUser(array $input): array
     {
-        $this->studentRepo = new StudentRepository();
-        $this->lecturerRepo = new LecturerRepository();
-        $this->adminRepo = new AdminRepository();
+        $role = $input['role_id'] ?? null; // check the role;
+
+        if (!$this->isValidRole($role)) {
+            return $this->fail('Invalid role');
+        }
+
+        $fetchedRole = $this->roleRepo->fetchRoleById($role);
+        if (empty($input['email']) || empty($input['password']) || empty($input['full_name'])) {
+            return $this->fail('Email, password, and full name are required');
+        }
+
+        if ($this->userRepo->findByEmail($input['email'])) {
+            return $this->fail('Email already exists');
+        }
+
+        $user = new User();
+        $user->email = $input['email'];
+        $user->password = PasswordUtil::hash($input['password']);
+        $user->full_name = $input['full_name'];
+        $user->role_id = $role;
+
+        $created = $this->userRepo->createUser($user);
+
+        if (!$created) {
+            return $this->fail('Something went wrong during registration');
+        }
+
+        $token = JwtSessionGenerator::generate(
+            $user->id,
+            $user->email,
+            $user->role_id
+        );
+
+        // Get user with profile
+        $userWithProfile = $this->userService->getUserWithProfile($user->id);
+        $dto = new UserLoginDto($userWithProfile, $token);
+        return [
+            'success' => true,
+            'data' => (array)$dto
+        ];
     }
 
     public function authenticate(array $input): array
     {
-        $role = $input['role'] ?? null;
+        $email = $input['email'] ?? '';
+        $password = $input['password'] ?? '';
 
-        if ($role === 'student') {
-            $matric = $input['matric_number'] ?? '';
-            $password = $input['password'] ?? '';
-
-            $student = $this->studentRepo->findByMatric($matric);
-            if (!$student || !password_verify($password, $student->password)) {
-                return ['success' => false, 'message' => 'Invalid matric number or password'];
-            }
-
-            $_SESSION['user'] = [
-                'id' => $student->id,
-                'matric_number' => $student->matric_number,
-                'role' => 'student'
-            ];
-            return ['success' => true, 'user' => $_SESSION['user']];
+        if (empty($email) || empty($password)) {
+            return $this->fail('Email, password are required');
         }
 
-        if ($role === 'lecturer') {
-            $email = $input['email'] ?? '';
-            $password = $input['password'] ?? '';
+        $user = $this->userRepo->findByEmail($email);
 
-            $lecturer = $this->lecturerRepo->findByEmail($email);
-            if (!$lecturer || !password_verify($password, $lecturer->password)) {
-                return ['success' => false, 'message' => 'Invalid email or password'];
-            }
-
-            $_SESSION['user'] = [
-                'id' => $lecturer->id,
-                'email' => $lecturer->email,
-                'role' => 'lecturer'
-            ];
-            return ['success' => true, 'user' => $_SESSION['user']];
+        if (!$user) {
+            return $this->fail('User not found');
         }
 
-        if ($role === 'admin') {
-            $email = $input['email'] ?? '';
-            $password = $input['password'] ?? '';
-
-            $admin = $this->adminRepo->findByEmail($email);
-            if (!$admin || !password_verify($password, $admin->password)) {
-                return ['success' => false, 'message' => 'Invalid email or password'];
-            }
-
-            $_SESSION['user'] = [
-                'id' => $admin->id,
-                'email' => $admin->email,
-                'role' => 'admin',
-                'admin_type' => $admin->role,
-            ];
-            return ['success' => true, 'user' => $_SESSION['user']];
+        if (!PasswordUtil::verify($password, $user->password)) {
+            return $this->fail('Invalid password');
         }
 
-        return ['success' => false, 'message' => 'Invalid role specified'];
+        $token = JwtSessionGenerator::generate(
+            $user->id,
+            $user->email,
+            $user->role_id
+        );
+
+        // Get user with profile
+        $userWithProfile = $this->userService->getUserWithProfile($user->id);
+        $dto = new UserLoginDto($userWithProfile, $token);
+        return [
+            'success' => true,
+            'data' => (array)$dto
+        ];
+    }
+
+    private function isValidRole(?string $role): bool
+    {
+        return in_array($role, [1,2, 3]);
+    }
+
+    private function fail(string $message): array
+    {
+        return ['success' => false, 'message' => $message];
     }
 }

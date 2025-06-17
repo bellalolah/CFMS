@@ -7,17 +7,19 @@ class Course
     public int $id;
     public string $course_code;
     public string $course_title;
-    public int $department_id;
     public int $level;
-    
+    public ?string $created_at;
+    public ?string $updated_at;
 
-    public function toModel(object $data): self
+
+    public function toModel(array $data): self
     {
-        $this->id = $data->id;
-        $this->course_code = $data->course_code;
-        $this->course_title = $data->course_title;
-        $this->department_id = $data->department_id;
-        $this->level = $data->level;
+        $this->id = $data['id'] ?? null;
+        $this->course_code = $data['course_code'] ?? null;
+        $this->course_title = $data['course_title'] ?? null;
+        $this->level = $data['level'] ?? null;
+        $this->created_at = $data['created_at'] ?? null;
+        $this->updated_at = $data['updated_at'] ?? null;
         return $this;
     }
 
@@ -26,7 +28,6 @@ class Course
         return [
             'course_code' => $data->course_code,
             'course_title' => $data->course_title,
-            'department_id' => $data->department_id,
             'level' => $data->level,
         ];
     }

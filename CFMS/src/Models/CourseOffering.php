@@ -9,6 +9,8 @@ class CourseOffering
     public int $lecturer_id;
     public int $department_id;
     public int $semester_id;
+    public ?string $created_at;
+    public ?string $updated_at;
 
     public static function toModel(array $data): self
     {
@@ -18,6 +20,8 @@ class CourseOffering
         $model->lecturer_id = (int) $data['lecturer_id'];
         $model->department_id = (int) $data['department_id'];
         $model->semester_id = (int) $data['semester_id'];
+        $model->created_at = $data['created_at'] ?? null;
+        $model->updated_at = $data['updated_at'] ?? null;
 
         return $model;
     }

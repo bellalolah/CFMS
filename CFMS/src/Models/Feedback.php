@@ -2,42 +2,44 @@
 
 namespace Cfms\Models;
 
-use Cfms\Interface\Models;
+use Cfms\Interface\Model;
 
-class Feedback implements Models
+class Feedback implements Model
 {
     public $id;
-    public $student_id;
+    public $feedback_submission_id;
     public $question_id;
-    public $response;
+    public $answer_text;
+    public $created_at;
 
-    public static function toModel($data): Models {
+    public function toModel($data): Model {
         $model = new self();
         $model->id = $data->id ?? null;
-        $model->student_id = $data->student_id ?? null;
+        $model->feedback_submission_id = $data->feedback_submission_id ?? null;
         $model->question_id = $data->question_id ?? null;
-        $model->response = $data->response ?? null;
+        $model->answer_text = $data->answer_text ?? null;
+        $model->created_at = $data->created_at ?? null;
         return $model;
     }
 
-    public function getModel($data): Models {
+    public function getModel($data): Model {
         $this->validateData($data);
         $model = new self();
-        $model->student_id = $data->student_id ?? null;
+        $model->feedback_submission_id = $data->feedback_submission_id ?? null;
         $model->question_id = $data->question_id ?? null;
-        $model->response = $data->response ?? null;
+        $model->answer_text = $data->answer_text ?? null;
         return $model;
     }
 
     private function validateData($data) {
-        if (empty($data->student_id)) {
-            throw new \InvalidArgumentException("Student ID is required.");
+        if (empty($data->feedback_submission_id)) {
+            throw new \InvalidArgumentException("Feedback submission ID is required.");
         }
         if (empty($data->question_id)) {
             throw new \InvalidArgumentException("Question ID is required.");
         }
-        if (!isset($data->response)) {
-            throw new \InvalidArgumentException("Response is required.");
+        if (!isset($data->answer_text)) {
+            throw new \InvalidArgumentException("Answer text is required.");
         }
     }
 }

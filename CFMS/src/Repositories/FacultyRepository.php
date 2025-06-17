@@ -2,53 +2,57 @@
 
 namespace Cfms\Repositories;
 
-use Cfms\Models\Faculty;
+use Cfms\Repositories\BaseRepository;
 
 class FacultyRepository extends BaseRepository
 {
-    protected $table = 'faculties';
+    protected string $table = 'faculties';
 
-    // Retrieve all faculties
-    public function getAllFaculties(): array
+    public function findFacultyById(int $id)
     {
-        $facultyRecords = $this->findAll($this->table);
-        $facultyList = [];
-
-        foreach ($facultyRecords as $facultyData) {
-            $faculty = new Faculty();
-            $facultyList[] = $faculty->toModel((object)$facultyData);
-        }
-
-        return $facultyList;
+        return parent::findById($this->table, $id);
     }
 
-    // Retrieve a specific faculty by ID
-    public function getFacultyById($id): ?Faculty
+    public function findAllFaculty(): array
     {
-        $facultyData = $this->findById($this->table, $id);
-        if ($facultyData) {
-            $faculty = new Faculty();
-            return $faculty->toModel((object)$facultyData);
-        }
-
-        return null;
+        return parent::findAll($this->table);
     }
 
-    // Create a new faculty record
-    public function createFaculty(Faculty $facultyData): ?Faculty
+    public function findFacultyByName(string $name): array
     {
-        $insert_data = [
-            'name' => $facultyData->name,
-            'code' => $facultyData->code
-        ];
+        return parent::findByColumn($this->table, 'name', $name);
+    }
 
-        $facultyData->id = $this->insert($this->table, $insert_data);
+    public function createFaculty(array $data): int
+    {
+        return parent::insert($this->table, $data);
+    }
 
-        if ($facultyData->id) {
-            $faculty = new Faculty();
-            return $faculty->getModel((object)$facultyData);
+    public function createFaculties(array $faculties): array
+    {
+        $ids = [];
+        foreach ($faculties as $data) {
+            $ids[] = $this->createFaculty($data);
         }
+        return $ids;
+    }
 
-        return null;
+    public function updateFaculty(int $id, array $data): bool
+    {
+        return parent::update($this->table, $data, $id);
+    }
+
+    public function deleteFaculty(int $id): bool
+    {
+        return parent::deleteById($this->table, $id);
+    }
+
+    public function findAllFacultyWithoutDates(): array
+    {
+        // Only select id and name, not date fields
+        $sql = "SELECT id, name FROM {$this->table}";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

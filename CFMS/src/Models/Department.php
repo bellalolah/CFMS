@@ -2,21 +2,29 @@
 
 namespace Cfms\Models;
 
-class Department implements Models
+use Cfms\Interface\Model;
+
+
+
+class Department implements Model
 {
     public $id;
     public $name;
     public $faculty_id;
+    public $created_at;
+    public $updated_at;
 
-    public static function toModel($data): Models {
+    public function toModel($data): Department {
         $departmentModel = new self();
         $departmentModel->id = $data->id ?? null;
         $departmentModel->name = $data->name ?? null;
         $departmentModel->faculty_id = $data->faculty_id ?? null;
+        $departmentModel->created_at = $data->created_at ?? null;
+        $departmentModel->updated_at = $data->updated_at ?? null;
         return $departmentModel;
     }
 
-    public function getModel($data): Models {
+    public function getModel($data): Department {
         $this->validateData($data);
         $departmentModel = new self();
         $departmentModel->name = $data->name ?? null;
