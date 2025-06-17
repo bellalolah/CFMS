@@ -2,40 +2,46 @@
 
 namespace Cfms\Models;
 
-use Cfms\Interface\Models;
-
+use Cfms\Interface\Model;
 
 class Questionnaire implements Model
 {
     public $id;
-    public $course_id;
-    public $lecturer_id;
+    public $course_offering_id;
     public $title;
     public $status;
+    public $created_at;
+    public $updated_at;
+    public $feedback_round;
 
-    public static function toModel($data): Models {
-        $questionnaireModel = new self();
-        $questionnaireModel->id = $data->id ?? null;
-        $questionnaireModel->course_id = $data->course_id ?? null;
-        $questionnaireModel->lecturer_id = $data->lecturer_id ?? null;
-        $questionnaireModel->title = $data->title ?? null;
-        $questionnaireModel->status = $data->status ?? null;
-        return $questionnaireModel;
+    public function toModel($data): StudentProfile {
+        $model = new self();
+        $model->id = $data->id ?? null;
+        $model->course_offering_id = $data->course_offering_id ?? null;
+        $model->title = $data->title ?? null;
+        $model->status = $data->status ?? null;
+        $model->created_at = $data->created_at ?? null;
+        $model->updated_at = $data->updated_at ?? null;
+        $model->feedback_round = $data->feedback_round ?? 1;
+        return $model;
     }
 
-    public function getModel($data): Models {
+    public function getModel($data): StudentProfile {
         $this->validateData($data);
-        $questionnaireModel = new self();
-        $questionnaireModel->course_id = $data->course_id ?? null;
-        $questionnaireModel->lecturer_id = $data->lecturer_id ?? null;
-        $questionnaireModel->title = $data->title ?? null;
-        $questionnaireModel->status = $data->status ?? 'active';
-        return $questionnaireModel;
+        $model = new self();
+        $model->course_offering_id = $data->course_offering_id ?? null;
+        $model->title = $data->title ?? null;
+        $model->status = $data->status ?? 'inactive';
+        $model->feedback_round = $data->feedback_round ?? 1;
+        return $model;
     }
 
     private function validateData($data) {
-        if (empty($data->course_id)) throw new \InvalidArgumentException("Course ID is required.");
-        if (empty($data->lecturer_id)) throw new \InvalidArgumentException("Lecturer ID is required.");
-        if (empty($data->title)) throw new \InvalidArgumentException("Title is required.");
+        if (empty($data->course_offering_id)) {
+            throw new \InvalidArgumentException("Course offering ID is required.");
+        }
+        if (empty($data->title)) {
+            throw new \InvalidArgumentException("Title is required.");
+        }
     }
 }
