@@ -7,9 +7,9 @@ use PDOException;
 
 class DBH
 {
-    private $dsn = "mysql:host=localhost:3306;dbname=cfms";
+    private $dsn = "mysql:host=localhost;dbname=cfms";
     private $dbusername = "root";
-    private $dbpassword = "cfmsRoot_Dev2025";
+    private $dbpassword = "";
 
     protected function connect()
     {

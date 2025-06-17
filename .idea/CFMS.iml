@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src" isTestSource="false" packagePrefix="Dell\Cfms\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Config" isTestSource="false" packagePrefix="Cfms\Config\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Controllers" isTestSource="false" packagePrefix="Cfms\Controllers\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Core" isTestSource="false" packagePrefix="Cfms\Core\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Interface" isTestSource="false" packagePrefix="Cfms\Interface\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Middlewares" isTestSource="false" packagePrefix="Cfms\Middlewares\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Models" isTestSource="false" packagePrefix="Cfms\Models\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Repositories" isTestSource="false" packagePrefix="Cfms\Repositories\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Response" isTestSource="false" packagePrefix="Cfms\Response\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Routes" isTestSource="false" packagePrefix="Cfms\Routes\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Services" isTestSource="false" packagePrefix="Cfms\Services\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Utils" isTestSource="false" packagePrefix="Cfms\Utils\" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Dto" isTestSource="false" packagePrefix="Cfms\Dto\" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/fig/http-message-util" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/firebase/php-jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/fast-route" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-server-middleware" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/slim/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/slim/slim" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laravel/serializable-closure" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-di/invoker" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-di/php-di" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
