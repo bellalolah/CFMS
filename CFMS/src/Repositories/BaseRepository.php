@@ -50,10 +50,14 @@ abstract class BaseRepository extends DBH
             throw new \InvalidArgumentException("Insert data array cannot be empty.");
         }
 
-        $fields = implode(", ", array_keys($data));
+        // THIS IS THE FIX: Wrap each key in backticks
+        $fields = implode(", ", array_map(fn($key) => "`$key`", array_keys($data)));
+
         $placeholders = ":" . implode(", :", array_keys($data));
 
-        $sql = "INSERT INTO {$table} ({$fields}) VALUES ({$placeholders})";
+        // Also wrap the table name for good measure
+        $sql = "INSERT INTO `{$table}` ({$fields}) VALUES ({$placeholders})";
+
         $stmt = $this->db->prepare($sql);
 
         foreach ($data as $key => $value) {

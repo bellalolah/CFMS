@@ -18,8 +18,8 @@ class CourseOffering
         $model->id = (int) $data['id'];
         $model->course_id = (int) $data['course_id'];
         $model->lecturer_id = (int) $data['lecturer_id'];
-        $model->department_id = (int) $data['department_id'];
         $model->semester_id = (int) $data['semester_id'];
+        // REMOVED the line for department_id
         $model->created_at = $data['created_at'] ?? null;
         $model->updated_at = $data['updated_at'] ?? null;
 

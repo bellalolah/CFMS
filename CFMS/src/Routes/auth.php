@@ -1,15 +1,16 @@
 <?php
-// File: routes/auth.php
 
-// 1. Import all the classes you need to build the dependency chain
 use Cfms\Controllers\AuthController;
-use Slim\App; // You already have this
-use Slim\Routing\RouteCollectorProxy; // Often needed for group type-hinting
+use Cfms\Controllers\UserController;
+use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
     $app->group('/auth', function (RouteCollectorProxy $group) use ($app) {
         $controller = $app->getContainer()->get(AuthController::class);
+        $uc = $app->getContainer()->get(UserController::class);
         $group->post('/register', [$controller, 'register']);
+        $group->post('/students', [$uc, 'createStudent']);
         $group->post('/login', [$controller, 'login']);
     });
 };

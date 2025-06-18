@@ -8,13 +8,20 @@ use Slim\Routing\RouteCollectorProxy;
 return function (App $app) {
     $app->group('/faculties', function (RouteCollectorProxy $group) use ($app) {
         $controller = $app->getContainer()->get(FacultyController::class);
-        $group->get('', [$controller, 'getAllWithoutDates']);
+        $group->get('', [$controller, 'getAllWithoutDates'])
+            ->add(JwtAuthMiddleware::class);
         $group->get("/with-departments", [$controller, 'getAllWithDepartments']);
-        $group->get('/{id}', [$controller, 'getById']);
-        $group->get('/name/{name}', [$controller, 'getByName']);
-        $group->post('', [$controller, 'create']);
-        $group->post('/batch', [$controller, 'createMany']);
-        $group->put('/{id}', [$controller, 'update']);
-        $group->delete('/{id}', [$controller, 'delete']);
-    })->add(JwtAuthMiddleware::class);
+        $group->get('/{id}', [$controller, 'getById'])
+            ->add(JwtAuthMiddleware::class);
+        $group->get('/name/{name}', [$controller, 'getByName'])
+            ->add(JwtAuthMiddleware::class);
+        $group->post('', [$controller, 'create'])
+            ->add(JwtAuthMiddleware::class);
+        $group->post('/batch', [$controller, 'createMany'])
+            ->add(JwtAuthMiddleware::class);
+        $group->put('/{id}', [$controller, 'update'])
+            ->add(JwtAuthMiddleware::class);
+        $group->delete('/{id}', [$controller, 'delete'])
+            ->add(JwtAuthMiddleware::class);
+    });
 };

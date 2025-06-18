@@ -20,7 +20,7 @@ class JsonErrorRenderer
 
     private function getFriendlyMessage(Throwable $exception): string
     {
-        if ($exception instanceof \Cfms\Core\DatabaseConnectionException) {
+        if ($exception instanceof \Dell\Cfms\Exceptions\DatabaseConnectionException) {
             return 'Unable to connect to the database. Please try again later.';
         }
         if ($exception instanceof \PDOException) {
@@ -41,13 +41,17 @@ class JsonErrorRenderer
         if ($exception instanceof \RuntimeException) {
             return 'A server error occurred. Please try again later.';
         }
+
+        if ($exception instanceof \Dell\Cfms\Exceptions\AuthorizationException) {
+            return 'You do not have permission to access this resource.';
+        }
         // Add more custom cases as needed
         return 'An unexpected error occurred. Please try again later.';
     }
 
     private function getErrorCode(Throwable $exception): string
     {
-        if ($exception instanceof \Cfms\Core\DatabaseConnectionException) {
+        if ($exception instanceof \Dell\Cfms\Exceptions\DatabaseConnectionException) {
             return 'DB_CONNECTION_ERROR';
         }
         if ($exception instanceof \PDOException) {

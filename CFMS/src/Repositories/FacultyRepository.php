@@ -55,4 +55,22 @@ class FacultyRepository extends BaseRepository
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    // In Cfms\Repositories\FacultyRepository.php
+
+    public function findByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        // Ensure all IDs are integers for safety
+        $sanitizedIds = array_map('intval', $ids);
+        $placeholders = implode(',', array_fill(0, count($sanitizedIds), '?'));
+        $sql = "SELECT * FROM {$this->table} WHERE id IN ({$placeholders})";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($sanitizedIds);
+
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+    }
 }

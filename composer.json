@@ -18,7 +18,8 @@
             "Cfms\\Middlewares\\": "CFMS/src/Middlewares",
             "Cfms\\Routes\\": "CFMS/src/Routes",
             "Cfms\\Utils\\": "CFMS/src/Utils",
-            "Cfms\\Dto\\": "CFMS/src/Dto"
+            "Cfms\\Dto\\": "CFMS/src/Dto",
+            "Cfms\\Exceptions\\": "CFMS/src/Exceptions"
         },
         "classmap": [
             "CFMS/src/Models",
@@ -30,8 +31,8 @@
             "CFMS/src/Routes",
             "CFMS/src/Utils",
             "CFMS/src/Core",
-            "CFMS/src/Dto"
-
+            "CFMS/src/Dto",
+            "CFMS/src/Exceptions"
         ]
     },
     "authors": [

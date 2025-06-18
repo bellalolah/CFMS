@@ -65,4 +65,24 @@ class StudentProfileRepository extends BaseRepository
         $data['updated_at'] = date('Y-m-d H:i:s');
         return $this->updateByColumn($this->table, 'user_id', $userId, $data);
     }
+
+    // In Cfms\Repositories\user_profile\StudentProfileRepository.php
+
+    public function findByUserIds(array $userIds): array
+    {
+        if (empty($userIds)) {
+            return [];
+        }
+        $placeholders = implode(',', array_fill(0, count($userIds), '?'));
+        $sql = "SELECT * FROM {$this->table} WHERE user_id IN ({$placeholders})";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($userIds);
+
+        $profiles = [];
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $profiles[] = (new StudentProfile())->toModel($row);
+        }
+        return $profiles;
+    }
+
 }

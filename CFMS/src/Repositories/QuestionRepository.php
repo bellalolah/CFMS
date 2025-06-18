@@ -1,45 +1,23 @@
 <?php
 namespace Cfms\Repositories;
 
+
 use Cfms\Models\Question;
 
 class QuestionRepository extends BaseRepository
 {
-    protected $table = 'questions';
+    protected string $table = 'questions';
 
-    public function getAllQuestionsByQuestionnaire(int $questionnaireId): array
+    /**
+     * Finds all questions associated with a specific questionnaire ID.
+     */
+    public function findByQuestionnaireId(int $questionnaireId): array
     {
-        $results = $this->findByColumn($this->table, 'questionnaire_id', $questionnaireId);
-        $questions = [];
+        $rows = $this->findByColumn($this->table, 'questionnaire_id', $questionnaireId);
 
-        foreach ($results as $row) {
-            $questions[] = (new Question())->toModel((object) $row);
-        }
+        // Sort the questions by their 'order' property
+        usort($rows, fn($a, $b) => $a->order <=> $b->order);
 
-        return $questions;
-    }
-
-    public function getQuestionById(int $id): ?Question
-    {
-        $result = $this->findById($this->table, $id);
-        return $result ? (new Question())->toModel((object) $result) : null;
-    }
-
-    public function createQuestion(Question $question): ?Question
-    {
-        $data = $question->getModel();
-        $question->id = $this->insert($this->table, $data);
-
-        return $question->id ? $question : null;
-    }
-
-    public function updateQuestion(int $id, array $data): bool
-    {
-        return $this->update($this->table, $id, $data);
-    }
-
-    public function deleteQuestion(int $id): bool
-    {
-        return $this->deleteById($this->table, $id);
+        return array_map(fn($row) => (new Question())->toModel($row), $rows);
     }
 }

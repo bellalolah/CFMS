@@ -54,9 +54,6 @@ $departmentRoutes($app);
 $facultyRoutes = require __DIR__ . '/CFMS/src/Routes/faculties.php';
 $facultyRoutes($app);
 
-$studentProfileRoutes = require __DIR__ . '/CFMS/src/Routes/student_profiles.php';
-$studentProfileRoutes($app);
-
 $lecturerProfileRoutes = require __DIR__ . '/CFMS/src/Routes/lecturer_profiles.php';
 $lecturerProfileRoutes($app);
 
@@ -77,6 +74,27 @@ $semesterRoutes($app);*/
 
 $sessionRoutes = require __DIR__ . '/CFMS/src/Routes/session.php';
 $sessionRoutes($app);
+
+$criterionRoutes = require __DIR__ . '/CFMS/src/Routes/criterias.php';
+$criterionRoutes($app);
+
+$questionnaireRoutes = require __DIR__ . '/CFMS/src/Routes/questionnaires.php';
+$questionnaireRoutes($app);
+
+$lecturerRoutes = require __DIR__ . '/CFMS/src/Routes/lecturers.php';
+$lecturerRoutes($app);
+
+$feedbackSubmissionRoutes = require __DIR__ . '/CFMS/src/Routes/feedbacks.php';
+$feedbackSubmissionRoutes($app);
+
+$studentsRoutes = require __DIR__ . '/CFMS/src/Routes/students.php';
+$studentsRoutes($app);
+
+/*$feedbackRoutes = require __DIR__ . '/CFMS/src/Routes/feedbacks.php';
+$feedbackRoutes($app);*/
+
+
+// -- ERROR HANDLING MIDDLEWARES --
 
 
 // The error middleware should be added last.

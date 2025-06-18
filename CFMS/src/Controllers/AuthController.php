@@ -10,10 +10,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class AuthController extends BaseController
 {
     // The constructor now requires an AuthService instance.
-    // We use the same clean "constructor property promotion" syntax.
+
     public function __construct(private AuthService $authService)
     {
-        // The body is empty. PHP automatically assigns $this->authService.
+
     }
 
     public function login(Request $request, Response $response): Response

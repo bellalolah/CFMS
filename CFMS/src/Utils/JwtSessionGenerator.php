@@ -23,9 +23,9 @@ class JwtSessionGenerator
             'iat' => $issuedAt,
             'exp' => $expiration,
             'data' => [
-                'userId' => $userId,
+                'id' => $userId,
                 'email' => $email,
-                'role' => $role,
+                'role_id' => $role,
             ]
         ];
         return JWT::encode($payload, $secretKey, 'HS256');

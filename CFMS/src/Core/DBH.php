@@ -18,7 +18,7 @@ class DBH
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $e) {
-            throw new \Cfms\Core\DatabaseConnectionException('Could not connect to the database.', 0, $e);
+            throw new \Dell\Cfms\Exceptions\DatabaseConnectionException('Could not connect to the database.', 0, $e);
         }
     }
 }

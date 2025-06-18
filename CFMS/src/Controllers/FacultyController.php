@@ -43,7 +43,7 @@ class FacultyController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $user = $request->getAttribute('user');
-        $role = is_array($user) ? ($user['role'] ?? null) : ($user->role ?? null);
+        $role = is_array($user) ? ($user['role_id'] ?? null) : ($user->role ?? null);
         if (!$user || $role != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
@@ -55,7 +55,7 @@ class FacultyController extends BaseController
     public function createMany(Request $request, Response $response): Response
     {
         $user = $request->getAttribute('user');
-        $role = is_array($user) ? ($user['role'] ?? null) : ($user->role ?? null);
+        $role = is_array($user) ? ($user['role_id'] ?? null) : ($user->role ?? null);
         if (!$user || $role != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }

@@ -69,4 +69,37 @@ LecturerProfileRepository extends BaseRepository
             ]
         );
     }
+
+    // ... (your existing class and methods) ...
+
+    /**
+     * Finds all lecturer profiles that belong to a given list of user IDs.
+     *
+     * @param array $userIds An array of user IDs.
+     * @return array An array of LecturerProfile objects.
+     */
+    public function findByUserIds(array $userIds): array
+    {
+        if (empty($userIds)) {
+            return [];
+        }
+
+        // Ensure all IDs are integers for safety
+        $sanitizedIds = array_map('intval', $userIds);
+        $placeholders = implode(',', array_fill(0, count($sanitizedIds), '?'));
+
+        // The query uses the 'user_id' column
+        $sql = "SELECT * FROM {$this->table} WHERE user_id IN ({$placeholders})";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($sanitizedIds);
+
+        // Convert the raw database rows into an array of LecturerProfile models
+        $profiles = [];
+        foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+            $profiles[] = (new LecturerProfile())->toModel($row);
+        }
+
+        return $profiles;
+    }
 }

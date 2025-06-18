@@ -30,7 +30,7 @@ class DataInitializer
         }
 
         $admin = new User();
-        $admin->full_name= "Isaac Afolabi";
+        $admin->full_name= "Isabella Afolabi";
         $admin->password = PasswordUtil::hash('1234');
         $admin->email = $email;
         $admin->role_id = 1;

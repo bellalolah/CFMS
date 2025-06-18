@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # The PHP Service with Built-in Web Server
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # Map port 8000 on your local machine to port 8000 inside the container.
+      # Your Cloudflare Tunnel will connect to this port.
+      - "8000:8000"
+    volumes:
+      # Mount your application code from the host into the container
+      - ./src:/var/www/html
+    # This command starts PHP's built-in web server
+    # -S 0.0.0.0:8000 -> Start server on all interfaces at port 8000
+    # -t /var/www/html -> Set the document root to our code directory
+    command: php -S 0.0.0.0:8000 -t /var/www/html
+    networks:
+      - app-network
+
+  # The MySQL Database Service
+  db:
+    image: mysql:8.2
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: my_cmfs_db
+      MYSQL_USER: root
+      # It's generally better to use MYSQL_ROOT_PASSWORD only.
+      # Setting MYSQL_PASSWORD for the root user can sometimes cause issues.
+      MYSQL_ROOT_PASSWORD: my_secret_password
+    volumes:
+      # Use a named volume to persist the database data.
+      # Corrected to use 'cmfs-data' consistently.
+      - cmfs-data:/var/lib/mysql
+    networks:
+      - app-network
+
+# Define the network and volume
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  cmfs-data:
+    driver: local
