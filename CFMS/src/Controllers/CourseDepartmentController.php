@@ -2,6 +2,11 @@
 
 namespace Cfms\Controllers;
 
+use Cfms\Dto\CourseDto;
+use Cfms\Dto\DepartmentInfoDto;
+use Cfms\Repositories\CourseRepository;
+use Cfms\Repositories\DepartmentRepository;
+use Cfms\Repositories\FacultyRepository;
 use Cfms\Services\CourseDepartmentService;
 use Cfms\Utils\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -20,7 +25,7 @@ class CourseDepartmentController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -37,7 +42,7 @@ class CourseDepartmentController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -54,14 +59,14 @@ class CourseDepartmentController extends BaseController
     {
         $courseId = (int)$args['course_id'];
         $departments = $this->courseDepartmentService->getDepartmentsForCourse($courseId);
-        $departmentRepo = new \Cfms\Repositories\DepartmentRepository();
-        $facultyRepo = new \Cfms\Repositories\FacultyRepository();
+        $departmentRepo = new DepartmentRepository();
+        $facultyRepo = new FacultyRepository();
         $dtos = [];
         foreach ($departments as $dept) {
             $department = $departmentRepo->findDepartmentById($dept->department_id);
             if ($department) {
                 $faculty = $facultyRepo->findFacultyById($department->faculty_id);
-                $dtos[] = new \Cfms\Dto\DepartmentInfoDto((object)$department, (object)$faculty);
+                $dtos[] = new DepartmentInfoDto((object)$department, (object)$faculty);
             }
         }
         return  JsonResponse::withJson($response, $dtos);
@@ -71,12 +76,12 @@ class CourseDepartmentController extends BaseController
     {
         $departmentId = (int)$args['department_id'];
         $courses = $this->courseDepartmentService->getCoursesForDepartment($departmentId);
-        $courseRepo = new \Cfms\Repositories\CourseRepository();
+        $courseRepo = new CourseRepository();
         $dtos = [];
         foreach ($courses as $c) {
             $course = $courseRepo->getCourseById($c->course_id);
             if ($course) {
-                $dtos[] = new \Cfms\Dto\CourseDto($course);
+                $dtos[] = new CourseDto($course);
             }
         }
         return JsonResponse::withJson($response, $dtos);

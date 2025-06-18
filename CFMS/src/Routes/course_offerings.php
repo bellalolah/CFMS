@@ -15,6 +15,9 @@ return function ($app) {
     $app->group('/course-offerings', function ($group) use ($app, $controller) {
         $group->post('', [$controller, 'create']);
         $group->post('/batch', [$controller, 'createBulk']);
+        $group->delete('/batch', [$controller, 'unassignBulk']);
+        // ADD THIS NEW ROUTE for deleting by primary key IDs
+        $group->delete('', [$controller, 'unassignBulkByIds']);
         $group->get('', [$controller, 'getAll']);
         $group->get('/{id}', [$controller, 'getById']);
         $group->put('/{id}', [$controller, 'update']);

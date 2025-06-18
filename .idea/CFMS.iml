@@ -15,7 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Services" isTestSource="false" packagePrefix="Cfms\Services\" />
       <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Utils" isTestSource="false" packagePrefix="Cfms\Utils\" />
       <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Dto" isTestSource="false" packagePrefix="Cfms\Dto\" />
-      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/CFMS/src/Exceptions" isTestSource="false" packagePrefix="Cfms\Exceptions\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fig/http-message-util" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/firebase/php-jwt" />

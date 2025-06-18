@@ -18,7 +18,7 @@ class CourseController extends BaseController
     public function create(Request $request, Response $response): Response
     {
         $user = $request->getAttribute('user');
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -35,7 +35,7 @@ class CourseController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $courses = $this->courseService->getAllCourses();
@@ -47,7 +47,7 @@ class CourseController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $course = $this->courseService->getCourseById((int)$args['id']);
@@ -58,7 +58,7 @@ class CourseController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -70,12 +70,39 @@ class CourseController extends BaseController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $success = $this->courseService->deleteCourse((int)$args['id']);
         return JsonResponse::withJson($response, ['success' => $success]);
     }
 
-    // Add more methods as needed (get, update, delete, etc.)
+    public function getForStudent(Request $request, Response $response, array $args): Response
+    {
+        // 1. Get the target student ID from the URL path.
+        $studentId = (int)($args['id'] ?? 0);
+
+        // 2. Authorization: A student can only view their own courses (or an admin can view anyone's).
+        $user = (array)$request->getAttribute('user');
+        if (($user['role_id'] ?? null) != 1 && ($user['id'] ?? null) != $studentId) {
+            return JsonResponse::withJson($response, ['error' => 'Forbidden: You can only view your own courses.'], 403);
+        }
+
+        // 3. Get pagination parameters from the query string.
+        $params = $request->getQueryParams();
+        $page = (int)($params['page'] ?? 1);
+        $perPage = (int)($params['per_page'] ?? 15);
+
+        // 4. Call the service to get the data.
+        $result = $this->courseService->getCoursesForStudent($studentId, $page, $perPage);
+
+        if ($result === null) {
+            return JsonResponse::withJson($response, ['error' => 'Student profile not found.'], 404);
+        }
+
+        // 5. Format the data for the JSON response.
+        $result['data'] = array_map(fn($dto) => $dto->toArray(), $result['data']);
+
+        return JsonResponse::withJson($response, $result);
+    }
 }

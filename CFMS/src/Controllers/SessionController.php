@@ -15,7 +15,7 @@ class SessionController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             $response->getBody()->write(json_encode(['success' => false, 'message' => 'Forbidden: Admins only']));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
@@ -38,7 +38,7 @@ class SessionController
 
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['success' => false, 'message' => 'Forbidden: Admins only'], 403);
         }
 
@@ -99,7 +99,7 @@ class SessionController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             $response->getBody()->write(json_encode(['success' => false, 'message' => 'Forbidden: Admins only']));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }

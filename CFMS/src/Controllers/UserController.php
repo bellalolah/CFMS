@@ -22,6 +22,26 @@ class UserController
         return JsonResponse::withJson($response, $result, $status);
     }
 
+    public function createStudent(Request $request, Response $response): Response
+    {
+        $input = $request->getParsedBody();
+        if (is_object($input)) $input = (array)$input;
+
+        try {
+            $studentDto = $this->userService->createStudentWithProfile($input);
+
+            if ($studentDto) {
+                return JsonResponse::withJson($response, $studentDto->toArray(), 201);
+            }
+
+            return JsonResponse::withJson($response, ['error' => 'Failed to create student.'], 400);
+
+        } catch (\InvalidArgumentException $e) {
+            return JsonResponse::withJson($response, ['error' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return JsonResponse::withJson($response, ['error' => 'An unexpected server error occurred.'], 500);
+        }
+    }
     // Get user with their profile (student or lecturer)
     public function getUserWithProfile(Request $request, Response $response, array $args): Response
     {
@@ -56,32 +76,15 @@ class UserController
         return JsonResponse::withJson($response, $result, 200);
     }
 
-    // Admin-only: Create a lecturer
-    public function createLecturer(Request $request, Response $response): Response
-    {
-        $user = $request->getAttribute('user');
-        if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
-            return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
-        }
-        $input = $request->getParsedBody();
-        if (is_object($input)) $input = (array)$input;
-        $input['role_id'] = 2; // Force role to lecturer (2 is lecturer)
-        $result = $this->userService->registerUser($input);
-        if ($result['success']) {
-            $lecturer = $this->userService->getUserInfo($result['user_id']);
-            return JsonResponse::withJson($response, (array)$lecturer, 201);
-        }
-        return JsonResponse::withJson($response, $result, 400);
-    }
+
 
     // Get all lecturers
-    public function getLecturers(Request $request, Response $response): Response
+   /* public function getLecturers(Request $request, Response $response): Response
     {
         $lecturers = $this->userService->getLecturers();
         $data = array_map(fn($dto) => (array)$dto, $lecturers);
         return JsonResponse::withJson($response, $data);
-    }
+    }*/
 
     // Get all lecturers with their profile and courses
     public function getLecturersWithCourses(Request $request, Response $response): Response
@@ -96,7 +99,7 @@ class UserController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $lecturerId = (int)($args['lecturer_id'] ?? 0);
@@ -111,4 +114,68 @@ class UserController
         return JsonResponse::withJson($response, ['success' => $success], $success ? 200 : 500);
     }
 
+
+    public function createLecturer(Request $request, Response $response): Response
+    {
+        // 1. Admin Check (correct)
+        $user = $request->getAttribute('user');
+        if (is_object($user)) $user = (array)$user;
+        if (!$user || ($user['role_id'] ?? null) != 1) {
+            return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
+        }
+
+        $input = $request->getParsedBody();
+        if (is_object($input)) $input = (array)$input;
+
+        try {
+            // 2. Call our new, all-in-one service method
+            $lecturerDto = $this->userService->createLecturerWithProfile($input);
+
+            if ($lecturerDto) {
+                // Success! The DTO already contains the user and their profile.
+                // We just need to convert it to an array for the JSON response.
+                return JsonResponse::withJson($response, $lecturerDto->toArray(), 201);
+            }
+
+            // Handle the case where the service returned null (a predicted failure)
+            return JsonResponse::withJson($response, ['error' => 'Failed to create lecturer and profile.'], 400);
+
+        } catch (\InvalidArgumentException $e) {
+            // Catch specific validation errors from the service
+            return JsonResponse::withJson($response, ['error' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            // Catch any other unexpected server errors
+            return JsonResponse::withJson($response, ['error' => 'An unexpected server error occurred.'], 500);
+        }
+    }
+
+
+
+    public function getStudents(Request $request, Response $response): Response
+    {
+        $params = $request->getQueryParams();
+        $page = (int)($params['page'] ?? 1);
+        $perPage = (int)($params['per_page'] ?? 15);
+
+        $result = $this->userService->getPaginatedStudentsWithProfiles($page, $perPage);
+
+        // The service already returns a paginated structure with DTOs.
+        // We just need to convert the DTOs inside the 'data' key to arrays.
+        $result['data'] = array_map(fn($dto) => $dto->toArray(), $result['data']);
+
+        return JsonResponse::withJson($response, $result);
+    }
+
+    public function getLecturers(Request $request, Response $response): Response
+    {
+        $params = $request->getQueryParams();
+        $page = (int)($params['page'] ?? 1);
+        $perPage = (int)($params['per_page'] ?? 15);
+
+        $result = $this->userService->getPaginatedLecturersWithProfiles($page, $perPage);
+
+        $result['data'] = array_map(fn($dto) => $dto->toArray(), $result['data']);
+
+        return JsonResponse::withJson($response, $result);
+    }
 }

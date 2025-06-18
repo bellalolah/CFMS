@@ -20,7 +20,7 @@ class CourseOfferingController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -36,7 +36,7 @@ class CourseOfferingController
     {
         $user = $request->getAttribute('user');
         if (is_object($user)) $user = (array)$user;
-        if (!$user || ($user['role'] ?? null) != 1) {
+        if (!$user || ($user['role_id'] ?? null) != 1) {
             return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
         }
         $data = $request->getParsedBody();
@@ -61,5 +61,58 @@ class CourseOfferingController
         $offerings = $this->courseOfferingService->getAllBySession($sessionId);
         $data = array_map(fn($o) => $o->toArray(), $offerings);
         return JsonResponse::withJson($response, $data);
+    }
+
+
+    // In Cfms\Controllers\CourseOfferingController.php
+
+    public function unassignBulk(Request $request, Response $response): Response
+    {
+        // 1. Admin Check (same as your createBulk method)
+        $user = $request->getAttribute('user');
+        if (is_object($user)) $user = (array)$user;
+        if (!$user || ($user['role_id'] ?? null) != 1) {
+            return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
+        }
+
+        // 2. Get the data from the request body
+        $data = $request->getParsedBody();
+        if (!is_array($data) || empty($data)) {
+            return JsonResponse::withJson($response, ['error' => 'Invalid or empty payload. Expecting an array of offerings.'], 400);
+        }
+
+        // 3. Call the service to perform the un-assignment
+        $unassignedCount = $this->courseOfferingService->unassignBulkCourseOfferings($data);
+
+        // 4. Return a successful response
+        return JsonResponse::withJson($response, [
+            'success' => true,
+            'unassigned_count' => $unassignedCount
+        ]);
+    }
+
+    public function unassignBulkByIds(Request $request, Response $response): Response
+    {
+        // 1. Admin Check
+        $user = $request->getAttribute('user');
+        if (is_object($user)) $user = (array)$user;
+        if (!$user || ($user['role_id'] ?? null) != 1) {
+            return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
+        }
+
+        // 2. Get the array of IDs from the request body
+        $ids = $request->getParsedBody();
+        if (!is_array($ids) || empty($ids)) {
+            return JsonResponse::withJson($response, ['error' => 'Invalid or empty payload. Expecting a JSON array of IDs.'], 400);
+        }
+
+        // 3. Call the service to perform the un-assignment
+        $unassignedCount = $this->courseOfferingService->unassignBulkByIds($ids);
+
+        // 4. Return a successful response
+        return JsonResponse::withJson($response, [
+            'success' => true,
+            'unassigned_count' => $unassignedCount
+        ]);
     }
 }

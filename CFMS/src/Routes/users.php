@@ -1,5 +1,6 @@
 <?php
 
+use Cfms\Controllers\CourseController;
 use Cfms\Controllers\StudentProfileController;
 use Cfms\Controllers\UserController;
 use Cfms\Repositories\CourseRepository;
@@ -15,8 +16,10 @@ use Slim\Routing\RouteCollectorProxy;
 return function ($app) {
     $app->group('/users', function (RouteCollectorProxy $group) use ($app) {
         $controller = $app->getContainer()->get(UserController::class);
+        $courseController = $app->getContainer()->get(CourseController::class);
         $sProfileController = $app->getContainer()->get(StudentProfileController::class);
         $group->get('', [$controller, 'getPaginatedUsers']);
+        $group->post('/students', [$controller, 'createStudent']);
         $group->post('/register', [$controller, 'register']);
         $group->get('/info', [$controller, 'getPaginatedUsers']);
         $group->post('/lecturers', [$controller, 'createLecturer']);
@@ -26,5 +29,6 @@ return function ($app) {
       /*  $group->post('/{user_id}/profile', [$sProfileController, 'create']);*/
         $group->get('/{user_id}/profile', [$controller, 'getUserWithProfile']);
         $group->get('/{user_id}', [$controller, 'getUserInfo']);
+        $group->get('/students/{id}/courses', [$courseController,'getForStudent']);
     })->add(JwtAuthMiddleware::class);
 };

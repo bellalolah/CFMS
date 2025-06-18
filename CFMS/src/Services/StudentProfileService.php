@@ -2,13 +2,18 @@
 
 namespace Cfms\Services;
 
+use Cfms\Dto\StudentProfileDto;
 use Cfms\Models\StudentProfile;
+use Cfms\Repositories\DepartmentRepository;
+use Cfms\Repositories\FacultyRepository;
 use Cfms\Repositories\user_profile\StudentProfileRepository;
 
 class StudentProfileService
 {
 
-    public function __construct(private StudentProfileRepository $studentProfileRepo)
+    public function __construct(private StudentProfileRepository $studentProfileRepo,
+                                private DepartmentRepository $departmentRepo,
+                                private FacultyRepository $facultyRepo)
     {
 
     }
@@ -75,5 +80,67 @@ class StudentProfileService
     private function fail(string $msg): array
     {
         return ['success' => false, 'message' => $msg];
+    }
+    public function getDetailedProfile(int $userId): ?StudentProfileDto
+    {
+        $profile = $this->studentProfileRepo->findByUserId($userId);
+        if (!$profile) {
+            return null;
+        }
+
+        // Fetch the detailed department and faculty info
+        $department = $this->departmentRepo->findDepartmentById($profile->department_id);
+        $faculty = $department ? $this->facultyRepo->findFacultyById($department->faculty_id) : null;
+
+        if (!$department || !$faculty) {
+            // Data integrity issue, profile exists but department/faculty doesn't
+            return null;
+        }
+
+        // Assemble the DTOs
+        $departmentDto = new \Cfms\Dto\DepartmentInfoDto($department, $faculty);
+        return new StudentProfileDto($profile, $departmentDto);
+    }
+
+    // In Cfms\Services\StudentProfileService.php
+
+    public function getMultipleDetailedProfiles(array $userIds): array
+    {
+        if (empty($userIds)) {
+            return [];
+        }
+        // 1. Get all the basic profiles in one query
+        $profiles = $this->studentProfileRepo->findByUserIds($userIds);
+        if (empty($profiles)) {
+            return [];
+        }
+
+        // 2. Get all the necessary department and faculty IDs
+        $departmentIds = array_unique(array_map(fn($p) => $p->department_id, $profiles));
+
+        // 3. Fetch all departments and faculties in just two more queries
+        // NOTE: You'll need to add `findByIds` methods to these repositories if they don't exist.
+        $departments = $this->departmentRepo->findByIds($departmentIds);
+        $facultyIds = array_unique(array_map(fn($d) => $d->faculty_id, $departments));
+        $faculties = $this->facultyRepo->findByIds($facultyIds);
+
+        // 4. Map everything for easy lookup
+        $departmentsById = array_column($departments, null, 'id');
+        $facultiesById = array_column($faculties, null, 'id');
+
+        // 5. Build the final array of DTOs, indexed by user_id
+        $dtosByUserId = [];
+        foreach ($profiles as $profile) {
+            $dept = $departmentsById[$profile->department_id] ?? null;
+            if ($dept) {
+                $faculty = $facultiesById[$dept->faculty_id] ?? null;
+                if ($faculty) {
+                    $departmentDto = new \Cfms\Dto\DepartmentInfoDto($dept, $faculty);
+                    $dtosByUserId[$profile->user_id] = new \Cfms\Dto\StudentProfileDto($profile, $departmentDto);
+                }
+            }
+        }
+
+        return $dtosByUserId;
     }
 }

@@ -11,7 +11,8 @@ use Cfms\Repositories\user_profile\LecturerProfileRepository;
 class LecturerProfileService
 {
 
-    public function __construct(private LecturerProfileRepository $lecturerProfileRepo)
+    public function __construct(private LecturerProfileRepository $lecturerProfileRepo, private DepartmentRepository $departmentRepo,
+                                private FacultyRepository $facultyRepo)
     {
     }
 
@@ -92,5 +93,50 @@ class LecturerProfileService
     private function fail(string $msg): array
     {
         return ['success' => false, 'message' => $msg];
+    }
+
+    /**
+     * Gets multiple detailed lecturer profiles for a given list of user IDs.
+     *
+     * @param array $userIds An array of user IDs.
+     * @return array An array of LecturerProfileDto objects, indexed by user_id.
+     */
+    public function getMultipleDetailedProfiles(array $userIds): array
+    {
+        if (empty($userIds)) {
+            return [];
+        }
+        // Get all the basic lecturer profiles in one query
+
+        $profiles = $this->lecturerProfileRepo->findByUserIds($userIds);
+        if (empty($profiles)) {
+            return [];
+        }
+
+        // 2. Get all the necessary department and faculty IDs from the profiles
+        $departmentIds = array_unique(array_map(fn($p) => $p->department_id, $profiles));
+        $facultyIds = array_unique(array_map(fn($p) => $p->faculty_id, $profiles));
+
+        // 3. Fetch all related departments and faculties using our new findByIds methods
+        $departments = $this->departmentRepo->findByIds($departmentIds);
+        $faculties = $this->facultyRepo->findByIds($facultyIds);
+
+        // Map everything for easy lookup
+        $departmentsById = array_column($departments, null, 'id');
+        $facultiesById = array_column($faculties, null, 'id');
+
+        // Build the final array of DTOs, indexed by user_id
+        $dtosByUserId = [];
+        foreach ($profiles as $profile) {
+            $dept = $departmentsById[$profile->department_id] ?? null;
+            $faculty = $facultiesById[$profile->faculty_id] ?? null;
+
+            if ($dept && $faculty) {
+                // Note: We pass the full department and faculty objects to the DTO constructor
+                $dtosByUserId[$profile->user_id] = new \Cfms\Dto\LecturerProfileDto($profile, $dept, $faculty);
+            }
+        }
+
+        return $dtosByUserId;
     }
 }

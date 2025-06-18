@@ -3,20 +3,34 @@
 
 use Cfms\Controllers\AuthController;
 use Cfms\Controllers\CourseController;
+use Cfms\Controllers\CriterionController;
 use Cfms\Controllers\DepartmentController;
 use Cfms\Controllers\FacultyController;
+use Cfms\Controllers\FeedbackController;
+use Cfms\Controllers\FeedbackSubmissionController;
+use Cfms\Controllers\LecturerController;
 use Cfms\Controllers\LecturerCourseController;
+use Cfms\Controllers\QuestionnaireController;
 use Cfms\Controllers\SessionController;
 use Cfms\Controllers\StudentProfileController;
 use Cfms\Controllers\UserController;
 use Cfms\Repositories\CourseDepartmentRepository;
+use Cfms\Repositories\CriterionRepository;
+use Cfms\Repositories\FeedbackRepository;
+use Cfms\Repositories\FeedbackSubmissionRepository;
 use Cfms\Repositories\LecturerCourseRepository;
+use Cfms\Repositories\QuestionnaireRepository;
+use Cfms\Repositories\QuestionRepository;
 use Cfms\Repositories\RoleRepository;
 use Cfms\Repositories\user_profile\StudentProfileRepository;
 use Cfms\Services\CourseService;
+use Cfms\Services\CriterionService;
 use Cfms\Services\DepartmentService;
 use Cfms\Services\FacultyService;
 use Cfms\Services\AuthService;
+use Cfms\Services\FeedbackService;
+use Cfms\Services\FeedbackSubmissionService;
+use Cfms\Services\QuestionnaireService;
 use Cfms\Services\SemesterService;
 use Cfms\Services\SessionService;
 use Cfms\Services\UserService;
@@ -60,14 +74,32 @@ return function($container) {
             $c->get(SessionRepository::class)
         );
     });
+    $container->set(CriterionRepository::class, fn() => new CriterionRepository());
+    $container->set(QuestionnaireRepository::class, fn() => new QuestionnaireRepository());
+    $container->set(QuestionRepository::class, fn() => new QuestionRepository());
+    $container->set(FeedbackRepository::class, fn() => new FeedbackRepository());
+
+
+
+    $container->set(QuestionnaireService::class,
+        fn($c) => new QuestionnaireService($c->get(QuestionnaireRepository::class),
+            $c->get(QuestionRepository::class), $c->get(CriterionRepository::class), $c->get(CourseOfferingRepository::class)
+        , $c->get(FeedbackRepository::class),$c->get(CourseRepository::class),$c->get(StudentProfileService::class),$c->get(UserRepository::class),$c->get(SemesterRepository::class)));
+    $container->set(FeedbackService::class,fn($c) => new FeedbackService($c->get(FeedbackRepository::class), $c->get(QuestionnaireRepository::class), $c->get(QuestionRepository::class), $c->get(CriterionRepository::class), $c->get(CourseOfferingRepository::class)));
+    $container->set(CriterionService::class, fn($c) => new CriterionService($c->get(CriterionRepository::class)));
     $container->set(CourseOfferingController::class, fn($c) => new CourseOfferingController($c->get(CourseOfferingService::class)));
-    $container->set(CourseService::class, fn($c) => new CourseService($c->get(CourseRepository::class)));
+    $container->set(CourseService::class, fn($c) => new CourseService($c->get(CourseRepository::class), $c->get(StudentProfileRepository::class),$c->get(SessionRepository::class)));
     $container->set(DepartmentService::class, fn($c) => new DepartmentService($c->get(DepartmentRepository::class), $c->get(FacultyRepository::class),$c->get(CourseRepository::class)));
     $container->set(FacultyService::class, fn($c) => new FacultyService($c->get(FacultyRepository::class), $c->get(DepartmentRepository::class)));
     $container->set(AuthService::class, fn($c) => new AuthService($c->get(UserRepository::class), $c->get(RoleRepository::class), $c->get(UserService::class)));
-    $container->set(UserService::class, fn($c) => new UserService($c->get(UserRepository::class), $c->get(StudentProfileRepository::class), $c->get(LecturerProfileRepository::class), $c->get(LecturerCourseRepository::class), $c->get(CourseRepository::class)));
-    $container->set(StudentProfileService::class, fn($c) => new StudentProfileService($c->get(StudentProfileRepository::class)));
-    $container->set(LecturerProfileService::class, fn($c) => new LecturerProfileService($c->get(LecturerProfileRepository::class)));
+    $container->set(UserService::class, fn($c) => new UserService($c->get(UserRepository::class), $c->get(StudentProfileRepository::class), $c->get(LecturerProfileRepository::class), $c->get(LecturerCourseRepository::class), $c->get(LecturerProfileService::class),$c->get(StudentProfileService::class),$c->get(CourseRepository::class)));
+    $container->set(StudentProfileService::class, fn($c) => new StudentProfileService(
+        $c->get(StudentProfileRepository::class),
+        $c->get(DepartmentRepository::class),
+        $c->get(FacultyRepository::class)
+    ));
+    $container->set(FeedbackSubmissionService::class, fn() => new FeedbackSubmissionService($container->get(FeedbackSubmissionRepository::class)));
+    $container->set(LecturerProfileService::class, fn($c) => new LecturerProfileService($c->get(LecturerProfileRepository::class),$c->get(DepartmentRepository::class), $c->get(FacultyRepository::class)));
     $container->set(LecturerCourseService::class, fn($c) => new LecturerCourseService($c->get(LecturerCourseRepository::class), $c->get(CourseRepository::class)));
     $container->set(CourseDepartmentService::class, fn($c) => new CourseDepartmentService($c->get(CourseDepartmentRepository::class)));
     $container->set(SessionService::class, fn($c) => new SessionService(
@@ -101,4 +133,25 @@ return function($container) {
     $container->set(AuthController::class, fn($c) => new AuthController(
         $c->get(AuthService::class)
     ));
+    $container->set(CriterionController::class, fn($c) => new CriterionController(
+        $c->get(CriterionService::class)
+    ));
+    $container->set(QuestionnaireController::class, fn($c) => new QuestionnaireController(
+        $c->get(QuestionnaireService::class)
+    ));
+    $container->set(FeedbackController::class, fn($c) => new FeedbackController(
+        $c->get(FeedbackService::class)));
+    $container->set(LecturerController::class, fn($c) => new LecturerController(
+        $c->get(LecturerProfileService::class),
+        $c->get(QuestionnaireService::class)
+    ));
+    $container->set(FeedbackSubmissionController::class, fn($c) => new FeedbackSubmissionController(
+        $c->get(FeedbackSubmissionService::class)
+    ));
+    $container->set(StudentProfileService::class, fn($c) => new StudentProfileService(
+        $c->get(StudentProfileRepository::class),
+        $c->get(DepartmentRepository::class),
+        $c->get(FacultyRepository::class)
+    ));
+
 };
