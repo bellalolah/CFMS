@@ -4,72 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Config/DataInitializer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Controllers/DepartmentController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Controllers/FacultyController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/DepartmentWithCoursesDto.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/FacultyWithDepartmentsDto.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Middlewares/JsonErrorRenderer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Middlewares/JwtAuthMiddleware.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/LecturerProfile.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/Role.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/StudentProfile.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Models/User.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/RoleRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/UserRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/user_profile/LecturerProfileRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Repositories/user_profile/StudentProfileRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/auth.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/departments.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/faculties.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/health.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/DepartmentService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/FacultyService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Services/ProfileService.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/JsonResponse.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/JwtSessionGenerator.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Utils/PasswordUtil.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bootstrap.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/globals.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Config/session.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/AdminController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Controllers/AuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Core/DBH.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Core/DBH.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Core/Router.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Interface/InterfaceModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Interface/Model.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Admin.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Course.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Course.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/CourseOffering.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/CourseOffering.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Department.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Department.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Faculty.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Faculty.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Feedback.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Feedback.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Lecturer.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Questionnaire.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Questionnaire.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Questions.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Questions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Semester.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Semester.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Session.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Session.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Student.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/AdminRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CourseOfferingRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CourseRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/LecturerRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/SemesterRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/SessionRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/StudentRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Response/JsonResponse.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/AdminService.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/AuthService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/AuthService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CourseOfferingService.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CourseService.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/SemesterService.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/SessionService.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+    <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="added things.">
+      <change afterPath="$PROJECT_DIR$/sql_db_setup.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql_needed_to_be_run.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/sys.zb4BAA.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +25,9 @@
     </execution>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -175,6 +119,23 @@
       <workItem from="1750008425934" duration="44778000" />
       <workItem from="1750105187068" duration="16506000" />
     </task>
+    <task id="LOCAL-00001" summary="added things.">
+      <option name="closed" value="true" />
+      <created>1750336672906</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1750336672906</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added things.">
+      <option name="closed" value="true" />
+      <created>1750336692487</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1750336692487</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -182,6 +143,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="added things." />
+    <option name="LAST_COMMIT_MESSAGE" value="added things." />
   </component>
 </project>
