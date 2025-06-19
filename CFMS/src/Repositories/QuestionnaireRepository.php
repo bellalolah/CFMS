@@ -169,9 +169,7 @@ class QuestionnaireRepository extends BaseRepository
         return array_map(fn($row) => (new \Cfms\Models\Questionnaire())->toModel($row), $rows);
     }
 
-    // In Cfms\Repositories\QuestionnaireRepository.php
 
-    // In Cfms\Repositories\QuestionnaireRepository.php
 
     public function findPendingForStudent(int $studentUserId, int $departmentId, int $limit, int $offset): array
     {
@@ -217,39 +215,7 @@ class QuestionnaireRepository extends BaseRepository
         return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    /*public function findPendingForStudent(int $studentUserId, int $departmentId, int $limit, int $offset): array
-    {
-        $sql = "SELECT q.*, COUNT(f.id) as feedback_count 
-            FROM questionnaires AS q
-            
-            -- Join through the chain to get to the department
-            JOIN course_offerings AS co ON q.course_offering_id = co.id
-            JOIN lecturer_profiles AS lp ON co.lecturer_id = lp.user_id
-            
-            -- Left join to check for an existing submission
-            LEFT JOIN feedback_submissions AS fs ON q.id = fs.questionnaire_id AND fs.user_id = :student_id
-            
-            -- Left join to get the feedback count
-            LEFT JOIN feedbacks AS f ON q.id = f.questionnaire_id
-            
-            WHERE 
-                q.status = 'active'
-                AND lp.department_id = :department_id -- Filter by the department_id from the lecturer's profile
-                AND fs.id IS NULL -- Only include if NO submission record exists
-            
-            GROUP BY q.id
-            ORDER BY q.created_at DESC
-            LIMIT :limit OFFSET :offset";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':student_id', $studentUserId, \PDO::PARAM_INT);
-        $stmt->bindValue(':department_id', $departmentId, \PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return array_map(fn($row) => (new \Cfms\Models\Questionnaire())->toModel($row), $stmt->fetchAll(\PDO::FETCH_OBJ));
-    }*/
 
     public function countPendingForStudent(int $studentUserId, int $departmentId): int
     {

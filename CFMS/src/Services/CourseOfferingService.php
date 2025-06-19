@@ -67,7 +67,7 @@ class CourseOfferingService
 
     public function deleteCourseOffering(int $id): bool
     {
-        return $this->courseOfferingRepository->deleteCourseOffering($id);
+        return $this->courseOfferingRepository->softDeleteBulkByCriteria([$id]);
     }
 
    /* public function createBulkCourseOfferings(array $offerings): array
@@ -156,7 +156,7 @@ class CourseOfferingService
         }
 
         // Call the repository to perform the bulk deletion
-        return $this->courseOfferingRepository->deleteBulk($offerings);
+        return $this->courseOfferingRepository->softDeleteBulkByCriteria($offerings);
     }
 
     public function unassignBulkByIds(array $offeringIds): int
@@ -167,7 +167,7 @@ class CourseOfferingService
 
         // The service can add more complex validation if needed in the future.
         // For now, it just calls the repository.
-        return $this->courseOfferingRepository->deleteByIds($offeringIds);
+        return $this->courseOfferingRepository->softDeleteByIds($offeringIds);
     }
 
     // In Cfms\Services\CourseOfferingService.php

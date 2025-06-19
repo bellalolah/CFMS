@@ -17,16 +17,13 @@ class DataInitializer
 
     public function initialize(): void
     {
-        file_put_contents('data_initializer.log', "DataInitializer::initialize called\n", FILE_APPEND);
-        $email = "isa@gmail.com";
+         $email = "isa@gmail.com";
         $existingAdmin = $this->userRepository->findByEmail($email);
 
-        $outputFile = 'data_initializer.log'; // Define a log file
 
         if ($existingAdmin !== null) {
             $message = "Admin with email '{$email}' already exists.\n";
-            file_put_contents($outputFile, $message, FILE_APPEND);
-            return;
+             return;
         }
 
         $admin = new User();
@@ -39,10 +36,8 @@ class DataInitializer
 
         if ($created) {
             $message = "Admin created successfully!\n";
-            file_put_contents($outputFile, $message, FILE_APPEND);
-        } else {
+         } else {
             $message = "Admin creation failed!\n";
-            file_put_contents($outputFile, $message, FILE_APPEND);
-        }
+         }
     }
 }
