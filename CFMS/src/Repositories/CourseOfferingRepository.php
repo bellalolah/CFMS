@@ -184,15 +184,22 @@ class CourseOfferingRepository extends BaseRepository
         if (empty($ids)) {
             return [];
         }
+
+        // Ensure all IDs are integers for safety
         $sanitizedIds = array_map('intval', $ids);
-        $placeholders = implode(',', array_fill(0, count($sanitizedIds), '?'));
-        // Updated to respect soft deletes
+
+        // This is the critical fix. array_values() re-indexes the array to be 0, 1, 2...
+        // which prevents the PDO error.
+        $indexedIds = array_values($sanitizedIds);
+
+        $placeholders = implode(',', array_fill(0, count($indexedIds), '?'));
         $sql = "SELECT * FROM {$this->table} WHERE id IN ({$placeholders}) AND deleted_at IS NULL";
 
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($sanitizedIds);
 
-        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
-        return array_map(fn($row) => (new CourseOffering())->toModel((array)$row), $rows);
+        // Execute with the guaranteed-to-be-indexed array
+        $stmt->execute($indexedIds); // This is the changed line (was line 89)
+
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
     }
 }

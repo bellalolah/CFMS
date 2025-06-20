@@ -9,5 +9,5 @@ return function ($app) {
         $controller = $app->getContainer()->get(AdminKPIController::class);
         $group->get('/admin', [$controller, 'dashboardOverview']);
         $group->get('/admin/lecturer-performance', [$controller, 'lecturerPerformance']);
-    });
+    })->add(JwtAuthMiddleware::class);
 };

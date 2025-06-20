@@ -7,6 +7,7 @@ use Cfms\KPI\KPIDto\LecturerCoursePerformanceDto;
 use Cfms\KPI\KPIDto\LecturerDashboardStatsDto;
 use Cfms\KPI\KPIDto\LecturerPerformanceOverview;
 use Cfms\KPI\KPIDto\RecentFeedbackDto;
+use Cfms\KPI\KPIDto\RecentTextFeedbackDto;
 use Cfms\Repositories\BaseRepository;
 use PDO;
 
@@ -357,5 +358,68 @@ class LecturerKPIRepository extends BaseRepository
         $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         return array_map(fn($row) => RecentFeedbackDto::fromDbRow($row), $results);
+    }
+
+
+    /**
+     * Fetches the most recent text-based comments for a given lecturer.
+     *
+     * @param int $lecturerId The ID of the lecturer.
+     * @param int $limit The number of recent comments to return.
+     * @return RecentTextFeedbackDto[]
+     */
+    public function getRecentTextFeedback(int $lecturerId, int $limit = 2): array
+    {
+        $sql = <<<SQL
+    SELECT
+        c.course_title AS course_name,
+        f.answer_text,
+        f.created_at, -- The actual timestamp of the comment
+        -- This subquery calculates the overall rating for the questionnaire
+        -- that this specific text comment (f.id) belongs to.
+        (
+            SELECT
+                COALESCE(ROUND(AVG(
+                    CASE
+                        WHEN q_inner.question_type = 'rating' THEN f_inner.answer_value
+                        WHEN q_inner.question_type = 'slider' THEN (f_inner.answer_value / 100.0) * 5.0
+                        ELSE NULL
+                    END
+                ), 2), 0)
+            FROM feedbacks f_inner
+            JOIN questions q_inner ON f_inner.question_id = q_inner.id
+            -- Correlate to the outer questionnaire ID
+            WHERE f_inner.questionnaire_id = qn.id
+              AND f_inner.answer_value IS NOT NULL
+        ) AS overall_rating
+    FROM
+        feedbacks f
+    -- Join up to find the lecturer and course context
+    JOIN
+        questions q ON f.question_id = q.id
+    JOIN
+        questionnaires qn ON q.questionnaire_id = qn.id
+    JOIN
+        course_offerings co ON qn.course_offering_id = co.id
+    JOIN
+        courses c ON co.course_id = c.id
+    WHERE
+        co.lecturer_id = :lecturer_id
+        -- Filter FOR text comments only
+        AND f.answer_text IS NOT NULL AND f.answer_text != ''
+        AND f.deleted_at IS NULL
+    ORDER BY
+        f.created_at DESC -- Order by the most recent comment's creation time
+    LIMIT :limit;
+    SQL;
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':lecturer_id', $lecturerId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        return array_map(fn($row) => RecentTextFeedbackDto::fromDbRow($row), $results);
     }
 }

@@ -33,4 +33,9 @@ class LecturerKPIService
     {
         return $this->repository->getRecentFeedback($lecturerId, $limit);
     }
+
+    public function getRecentTextFeedback(int $lecturerId, int $limit = 2): array
+    {
+        return $this->repository->getRecentTextFeedback($lecturerId, $limit);
+    }
 }

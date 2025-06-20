@@ -66,6 +66,8 @@ class LecturerKPIController
 
     public function getRecentFeedbacks(Request $request,Response $response): Response
     {
+
+        error_log("Entering getRecentFeedbacks method");
         $lecturerId = (int)$request->getAttribute('lecturerId');
         $data = $this->service->getRecentFeedback($lecturerId);
 
@@ -73,6 +75,19 @@ class LecturerKPIController
             'courseName' => $dto->courseName,
             'submittedAt' => $dto->submittedAt,
             'rating' => $dto->rating,
-        ], $data));
+        ],$data));
     }
+
+    public function getRecentTextFeedbacks(Request $request, Response $response): Response
+    {
+        $lecturerId = (int)$request->getAttribute('lecturerId');
+        $data = $this->service->getRecentTextFeedback($lecturerId);
+
+        return JsonResponse::withJson($response, array_map(fn($dto) => [
+            'courseName' => $dto->courseName,
+            'submittedAt' => $dto->createdAt,
+            'feedbackText' => $dto->feedbackText,
+            'rating' => $dto->overallRating,
+        ],$data));
     }
+}

@@ -15,6 +15,5 @@ return function ($app) {
         $group->post('/{session_id}/activate', [$controller, 'activate']);
         $group->post('/{session_id}/semester', [$controller, 'createSemester']);
         $group->get('/by-date', [$controller, 'getByDate']);
-
-    });
+    })->add(JwtAuthMiddleware::class);
 };
