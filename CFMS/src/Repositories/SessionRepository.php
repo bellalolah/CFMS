@@ -2,6 +2,7 @@
 namespace Cfms\Repositories;
 
 use Cfms\Core\DBH;
+use Cfms\Dto\ActiveSessionSemesterDto;
 use Cfms\Models\Session;
 use PDO;
 
@@ -131,5 +132,45 @@ class SessionRepository extends BaseRepository
             error_log("Transaction failed: " . $e->getMessage()); // Log the error for debugging
             return null; // Return null to signal failure
         }
+    }
+
+
+    /**
+     * Fetches the currently active and open session along with all of its associated semesters.
+     * Includes a boolean flag to indicate which semester is currently ongoing.
+     *
+     * @return ActiveSessionSemesterDTO[] An array of DTOs, where each object represents one semester within the active session.
+     */
+    public function getActiveSessionWithSemesters(): array
+    {
+        $sql = <<<SQL
+        SELECT
+            s.id AS session_id,
+            s.name AS session_name,
+            s.status AS session_status,
+            s.is_active AS session_is_active,
+            sem.id AS semester_id,
+            sem.name AS semester_name,
+            sem.start_date,
+            sem.end_date,
+            -- This expression evaluates to 1 (true) or 0 (false) in MySQL.
+            (CURDATE() BETWEEN sem.start_date AND COALESCE(sem.end_date, '9999-12-31')) AS is_current
+        FROM
+            sessions s
+        JOIN
+            semesters sem ON s.id = sem.session_id
+        WHERE
+            s.status = 'open'
+            AND s.is_active = 1
+            AND s.deleted_at IS NULL
+            AND sem.deleted_at IS NULL
+        ORDER BY
+            sem.start_date ASC;
+        SQL;
+
+        $stmt = $this->db->query($sql);
+        $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        return array_map(fn($row) => ActiveSessionSemesterDto::fromDbRow($row), $results);
     }
 }

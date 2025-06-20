@@ -10,10 +10,11 @@ return function ($app) {
     $app->group('/sessions', function (RouteCollectorProxy $group) use ($app) {
         $controller = $app->getContainer()->get(SessionController::class);
         $group->post('', [$controller, 'create']);
+        $group->get('/active', [$controller, 'getActiveSessionSemester']);
         $group->get('/current', [$controller, 'getCurrent']);
         $group->post('/{session_id}/activate', [$controller, 'activate']);
         $group->post('/{session_id}/semester', [$controller, 'createSemester']);
         $group->get('/by-date', [$controller, 'getByDate']);
 
-    })->add(JwtAuthMiddleware::class);
+    });
 };

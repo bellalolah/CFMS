@@ -1,7 +1,3 @@
--- This script creates the full database schema for the CFMS application.
--- This version implements a system-wide SOFT DELETE pattern.
-
--- --------------------------------------------------------
 
 CREATE TABLE `roles`
 (
@@ -13,7 +9,6 @@ CREATE TABLE `roles`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `faculties`
 (
@@ -25,7 +20,6 @@ CREATE TABLE `faculties`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `users`
 (
@@ -41,7 +35,6 @@ CREATE TABLE `users`
     FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `departments`
 (
@@ -56,7 +49,6 @@ CREATE TABLE `departments`
     FOREIGN KEY (`faculty_id`) REFERENCES `faculties` (`id`) ON DELETE RESTRICT -- Changed from CASCADE to RESTRICT for safety
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `student_profiles`
 (
@@ -75,7 +67,6 @@ CREATE TABLE `student_profiles`
     FOREIGN KEY (`faculty_id`) REFERENCES `faculties` (`id`) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `lecturer_profiles`
 (
@@ -92,7 +83,6 @@ CREATE TABLE `lecturer_profiles`
     FOREIGN KEY (`faculty_id`) REFERENCES `faculties` (`id`) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `courses`
 (
@@ -106,7 +96,6 @@ CREATE TABLE `courses`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `course_departments`
 (
@@ -122,7 +111,6 @@ CREATE TABLE `course_departments`
     UNIQUE KEY `uq_course_department` (`course_id`, `department_id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `lecturer_courses`
 (
@@ -138,7 +126,6 @@ CREATE TABLE `lecturer_courses`
     UNIQUE KEY `uq_lecturer_course` (`user_id`, `course_id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `sessions`
 (
@@ -154,7 +141,6 @@ CREATE TABLE `sessions`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `semesters`
 (
@@ -171,7 +157,6 @@ CREATE TABLE `semesters`
     UNIQUE KEY `uq_semester_in_session` (`name`, `session_id`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `course_offerings`
 (
@@ -190,7 +175,6 @@ CREATE TABLE `course_offerings`
     UNIQUE KEY `uq_course_offering_active` (`course_id`, `semester_id`, `lecturer_id`, `deleted_at`)
 ) ENGINE = InnoDB;
 
--- --------------------------------------------------------
 
 CREATE TABLE `criteria`
 (
@@ -205,7 +189,6 @@ CREATE TABLE `criteria`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
 
 CREATE TABLE `questionnaires`
 (
@@ -232,8 +215,6 @@ CREATE TABLE `questionnaires`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 CREATE TABLE `questions`
 (
     `id`               INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -259,8 +240,7 @@ CREATE TABLE `questions`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- (Feedbacks and Feedback Submissions tables are unchanged as they should be hard-deleted)
--- ...
+
 
 CREATE TABLE `feedbacks`
 (

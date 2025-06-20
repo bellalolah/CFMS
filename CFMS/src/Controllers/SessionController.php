@@ -137,4 +137,15 @@ class SessionController
         $response->getBody()->write(json_encode($dtos));
         return $response->withHeader('Content-Type', 'application/json');
     }
+
+    public function getActiveSessionSemester(Request $request, Response $response, $args): Response
+    {
+        $session = $this->sessionService->activeSessionSemester();
+
+        return JsonResponse::withJson(
+            $response,
+            $session ?: ['message' => 'No active session found'],
+            $session ? 200 : 404
+        );
+    }
 }

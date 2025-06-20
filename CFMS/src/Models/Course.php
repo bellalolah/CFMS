@@ -12,6 +12,7 @@ class Course
     public ?string $updated_at;
 
 
+
     public function toModel(array $data): self
     {
         $this->id = $data['id'] ?? null;

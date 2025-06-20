@@ -17,9 +17,15 @@
             "Cfms\\Config\\": "CFMS/src/Config",
             "Cfms\\Middlewares\\": "CFMS/src/Middlewares",
             "Cfms\\Routes\\": "CFMS/src/Routes",
+            "Cfms\\Routes\\Kpi\\": "CFMS/src/Routes/Kpi",
             "Cfms\\Utils\\": "CFMS/src/Utils",
             "Cfms\\Dto\\": "CFMS/src/Dto",
-            "Cfms\\Exceptions\\": "CFMS/src/Exceptions"
+            "Cfms\\Exceptions\\": "CFMS/src/Exceptions",
+            "Cfms\\KPI\\": "CFMS/src/KPI",
+            "Cfms\\KPI\\Controllers\\": "CFMS/src/KPI/Controllers",
+            "Cfms\\KPI\\KPIDto\\": "CFMS/src/KPI/KPIDto",
+            "Cfms\\KPI\\Repositories\\": "CFMS/src/KPI/Repositories",
+            "Cfms\\KPI\\Services\\": "CFMS/src/KPI/Services"
         },
         "classmap": [
             "CFMS/src/Models",
@@ -29,10 +35,15 @@
             "CFMS/src/Config",
             "CFMS/src/Middlewares",
             "CFMS/src/Routes",
+            "CFMS/src/Routes/Kpi",
             "CFMS/src/Utils",
             "CFMS/src/Core",
             "CFMS/src/Dto",
-            "CFMS/src/Exceptions"
+            "CFMS/src/Exceptions",
+            "CFMS/src/KPI",
+            "CFMS/src/KPI/Controllers",
+            "CFMS/src/KPI/KPIDto",
+            "CFMS/src/KPI/Repositories"
         ]
     },
     "authors": [

@@ -4,14 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="added things.">
-      <change afterPath="$PROJECT_DIR$/sql_db_setup.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql_needed_to_be_run.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/63af8228-331e-4b8c-9bc8-517526641bda/storage_v2/_src_/schema/sys.zb4BAA.meta" beforeDir="false" />
+    <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="added needed sql queries">
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/ActiveSessionSemesterDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Controllers/AdminKPIController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Controllers/LecturerKPIController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/DashboardKPI.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/AdminDashboardStatsDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/LecturerCoursePerformanceDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/LecturerDashboardStatsDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/LecturerKPIDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/LecturerPerformanceDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/LecturerPerformanceOverview.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/RecentFeedbackDto.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Repositories/AdminKPIRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Repositories/LecturerKPIRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Repositories/LecturerKPIRepository2.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Repositories/QuestionnaireRepositoryKPI.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Services/AdminKPIService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/Services/LecturerKPIService.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/Kpi/admin_kpi.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CFMS/src/Routes/Kpi/lecturer_kpi.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CFMS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CFMS.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/SessionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Controllers/SessionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Course.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Course.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/BaseRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CriterionRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/CriterionRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/DepartmentRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/FacultyRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/SessionRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/SessionRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Routes/session.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Routes/session.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/SessionService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/SessionService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CFMS/src/Utils/JwtSessionGenerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Utils/JwtSessionGenerator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/di-container.php" beforeDir="false" afterPath="$PROJECT_DIR$/di-container.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql_db_setup.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql_db_setup.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql_needed_to_be_run.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql_needed_to_be_run.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +127,14 @@
       <recent name="$PROJECT_DIR$/CFMS/src/Routes" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -118,6 +155,8 @@
       <workItem from="1749958512101" duration="14108000" />
       <workItem from="1750008425934" duration="44778000" />
       <workItem from="1750105187068" duration="16506000" />
+      <workItem from="1750359457739" duration="12754000" />
+      <workItem from="1750375840491" duration="12165000" />
     </task>
     <task id="LOCAL-00001" summary="added things.">
       <option name="closed" value="true" />
@@ -135,7 +174,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750336692487</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added needed sql queries">
+      <option name="closed" value="true" />
+      <created>1750337035425</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1750337035425</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -144,6 +191,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
     <MESSAGE value="added things." />
-    <option name="LAST_COMMIT_MESSAGE" value="added things." />
+    <MESSAGE value="added needed sql queries" />
+    <option name="LAST_COMMIT_MESSAGE" value="added needed sql queries" />
   </component>
 </project>

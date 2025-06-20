@@ -90,6 +90,12 @@ $feedbackSubmissionRoutes($app);
 $studentsRoutes = require __DIR__ . '/CFMS/src/Routes/students.php';
 $studentsRoutes($app);
 
+$kpiRoutes = require __DIR__ . '/CFMS/src/Routes/Kpi/admin_kpi.php';
+$kpiRoutes($app);
+
+$lecturerKpiRoutes = require __DIR__ . '/CFMS/src/Routes/Kpi/lecturer_kpi.php';
+$lecturerKpiRoutes($app);
+
 /*$feedbackRoutes = require __DIR__ . '/CFMS/src/Routes/feedbacks.php';
 $feedbackRoutes($app);*/
 

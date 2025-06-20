@@ -14,7 +14,7 @@ class JwtSessionGenerator
         $secretKey = getSecretKey();
         $issuer = 'http://localhost:8000';
         $audience = 'http://localhost:3000';
-        $tokenLifetime = 3600;
+        $tokenLifetime = 60 * 60 * 24; // 24 hours
         $issuedAt = time();
         $expiration = $issuedAt + $tokenLifetime;
         $payload = [

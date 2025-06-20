@@ -42,14 +42,26 @@ class CriterionRepository extends BaseRepository
         if (empty($ids)) {
             return [];
         }
+
         $sanitizedIds = array_map('intval', $ids);
-        $placeholders = implode(',', array_fill(0, count($sanitizedIds), '?'));
-        $sql = "SELECT * FROM {$this->table} WHERE id IN ({$placeholders})";
+        $indexedIds = array_values($sanitizedIds);
+        $placeholders = implode(',', array_fill(0, count($indexedIds), '?'));
 
+        $sql = "SELECT * FROM {$this->table} WHERE id IN ({$placeholders}) AND deleted_at IS NULL";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute($sanitizedIds);
+        $stmt->execute($indexedIds);
 
-        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
-        return array_map(fn($row) => (new Criterion())->toModel($row), $rows);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC); // Fetch as assoc array
+
+        $models = [];
+        foreach ($rows as $row) {
+            $criterion = new Criterion();
+            foreach ($row as $key => $value) {
+                $criterion->$key = $value;
+            }
+            $models[] = $criterion;
+        }
+
+        return $models;
     }
 }

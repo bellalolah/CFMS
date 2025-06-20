@@ -62,5 +62,11 @@ class SessionService
     }
 
 
+    public function activeSessionSemester(): ?array
+    {
+        $session = $this->sessionRepo->getActiveSessionWithSemesters();
+        if (!$session) return null;
 
+        return $session;
+    }
 }

@@ -14,6 +14,8 @@ use Cfms\Controllers\QuestionnaireController;
 use Cfms\Controllers\SessionController;
 use Cfms\Controllers\StudentProfileController;
 use Cfms\Controllers\UserController;
+use Cfms\KPI\Controllers\LecturerKPIController;
+use Cfms\KPI\Repositories\LecturerKPIRepository;
 use Cfms\Repositories\CourseDepartmentRepository;
 use Cfms\Repositories\CriterionRepository;
 use Cfms\Repositories\FeedbackRepository;
@@ -48,6 +50,10 @@ use Cfms\Repositories\DepartmentRepository;
 use Cfms\Repositories\FacultyRepository;
 use Cfms\Repositories\SemesterRepository;
 use Cfms\Repositories\SessionRepository;
+use Dell\Cfms\KPI\Controllers\AdminKPIController;
+use Dell\Cfms\KPI\Repositories\AdminKPIRepository;
+use Dell\Cfms\KPI\Services\AdminKPIService;
+use Dell\Cfms\KPI\Services\LecturerKPIService;
 
 return function($container) {
     $container->set(CourseOfferingRepository::class, fn() => new CourseOfferingRepository());
@@ -153,5 +159,17 @@ return function($container) {
         $c->get(DepartmentRepository::class),
         $c->get(FacultyRepository::class)
     ));
+
+
+    // ------------------------ KPIS
+
+    $container->set(AdminKPIRepository::class, fn()=> new AdminKPIRepository());
+    $container->set(AdminKPIService::class, fn($c) => new AdminKPIService($c->get(AdminKPIRepository::class)));
+    $container->set(AdminKPIController::class, fn($c) => new AdminKPIController($c->get(AdminKPIService::class)));
+
+    $container->set(LecturerKPIRepository::class,fn()=>new LecturerKPIRepository());
+    $container->set(LecturerKPIService::class, fn($c) => new LecturerKPIService($c->get(LecturerKPIRepository::class)));
+    $container->set(LecturerKPIController::class, fn($c) => new LecturerKPIController($c->get(LecturerKPIService::class)));
+    // ------------------------ END KPIS
 
 };
