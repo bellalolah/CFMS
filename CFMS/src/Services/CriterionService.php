@@ -27,14 +27,29 @@ class CriterionService
         }
 
         //  Call the repository to create the record
-        $id = $this->criterionRepo->createCriterion($data);
+        $criterion = $this->criterionRepo->createCriterion($data);
 
         //  If successful, fetch and return the newly created Criterion object
-        if ($id) {
+        if ($criterion) {
             // You'll need to add findCriterionById to your repo if it's not there
-            return $this->criterionRepo->findCriterionById($id);
+            return $criterion;
         }
 
+        return null;
+    }
+
+    public function update(int $id, array $data): ?Criterion
+    {
+        if(!$id){
+            return null;
+        }
+        $criterion = $this->criterionRepo->findCriterionById($id);
+        if ($criterion) {
+            $updatedCriterion = $this->criterionRepo->updateCriterion($id,$data);
+            if ($updatedCriterion) {
+                return $criterion;
+            }
+        }
         return null;
     }
 }

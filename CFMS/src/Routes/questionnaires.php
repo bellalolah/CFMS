@@ -9,6 +9,7 @@ return function ($app) {
         $questionnaireController = $app->getContainer()->get(QuestionnaireController::class);
         $group->get('', [$questionnaireController, 'getAll']);
         $group->post('', [$questionnaireController, 'create']);
+        $group->get('/{id:\d+}/grouped', [$questionnaireController, 'getQuestionnaireWithGroupedCriteriaAndPerformance']);
         $group->get('/{id:\d+}', [$questionnaireController, 'getById']);
         $group->put('/{id:\d+}',[$questionnaireController, 'updateQuestionnaire']);
         $group->post('/{id:\d+}/feedbacks',[$feedBackController, 'createFeedback']);

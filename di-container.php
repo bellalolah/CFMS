@@ -168,7 +168,7 @@ return function($container) {
     $container->set(AdminKPIController::class, fn($c) => new AdminKPIController($c->get(AdminKPIService::class)));
 
     $container->set(LecturerKPIRepository::class,fn()=>new LecturerKPIRepository());
-    $container->set(LecturerKPIService::class, fn($c) => new LecturerKPIService($c->get(LecturerKPIRepository::class)));
+    $container->set(LecturerKPIService::class, fn($c) => new LecturerKPIService($c->get(LecturerKPIRepository::class),$c->get(FeedbackRepository::class)));
     $container->set(LecturerKPIController::class, fn($c) => new LecturerKPIController($c->get(LecturerKPIService::class)));
     // ------------------------ END KPIS
 

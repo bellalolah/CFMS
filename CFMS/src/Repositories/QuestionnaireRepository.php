@@ -26,9 +26,11 @@ class QuestionnaireRepository extends BaseRepository
     {
         $this->db->beginTransaction();
         try {
+            error_log("No errors after inserting questions: " . json_encode($questionsData));
             // 1. Create the Questionnaire record
             $questionnaireId = $this->insert($this->table, $questionnaireData);
             if (!$questionnaireId) {
+                error_log("logging questionnnaire creation failed: " . json_encode($questionnaireData));
                 $this->db->rollBack();
                 return null;
             }
@@ -38,6 +40,8 @@ class QuestionnaireRepository extends BaseRepository
                 $question['questionnaire_id'] = $questionnaireId;
                 $this->insert('questions', $question);
             }
+
+            error_log("No errors after inserting questions: " . json_encode($questionsData));
 
             // 3. Commit the transaction
             $this->db->commit();
@@ -126,7 +130,7 @@ class QuestionnaireRepository extends BaseRepository
      * @param int $lecturerId
      * @return int
      */
-    public function countByLecturer(int $lecturerId): int
+   /* public function countByLecturer(int $lecturerId): int
     {
         $sql = "SELECT COUNT(DISTINCT q.id) FROM {$this->table} AS q
             LEFT JOIN course_offerings AS co ON q.course_offering_id = co.id
@@ -138,11 +142,11 @@ class QuestionnaireRepository extends BaseRepository
         $stmt->execute();
 
         return (int)$stmt->fetchColumn();
-    }
+    }*/
 
     // In Cfms\Repositories\QuestionnaireRepository.php
 
-    public function findByLecturer(int $lecturerId, int $limit, int $offset): array
+   /* public function findByLecturer(int $lecturerId, int $limit, int $offset): array
     {
         // This query is now more advanced. It joins with both course_offerings and feedbacks.
         $sql = "SELECT 
@@ -167,7 +171,7 @@ class QuestionnaireRepository extends BaseRepository
         $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
         // The model will now be populated with the extra 'feedback_count' property
         return array_map(fn($row) => (new \Cfms\Models\Questionnaire())->toModel($row), $rows);
-    }
+    }*/
 
 
 
@@ -240,5 +244,81 @@ class QuestionnaireRepository extends BaseRepository
         $stmt->execute();
 
         return (int)$stmt->fetchColumn();
+    }
+
+
+
+    /**
+     * Counts the questionnaires a lecturer should see.
+     * This includes questionnaires for ACTIVE courses they teach, and templates they created.
+     *
+     * @param int $lecturerId
+     * @return int
+     */
+    public function countByLecturer(int $lecturerId): int
+    {
+        // THIS IS THE CORRECTED, SIMPLIFIED LOGIC
+        $sql = "SELECT COUNT(DISTINCT q.id) 
+                FROM {$this->table} AS q
+                LEFT JOIN course_offerings AS co ON q.course_offering_id = co.id
+                WHERE 
+                    -- Case A: It's for an ACTIVE course offering they are teaching.
+                    (co.lecturer_id = :lecturer_id AND co.deleted_at IS NULL) 
+                    OR 
+                    -- Case B: It's a general template (no course offering) they personally created.
+                    (q.course_offering_id IS NULL AND q.created_by_user_id = :lecturer_id_alt)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':lecturer_id', $lecturerId, \PDO::PARAM_INT);
+        $stmt->bindValue(':lecturer_id_alt', $lecturerId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * Finds questionnaires a lecturer should see (for ACTIVE courses or their own templates).
+     *
+     * @param int $lecturerId
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function findByLecturer(int $lecturerId, int $limit, int $offset): array
+    {
+        // THIS IS THE CORRECTED, SIMPLIFIED LOGIC
+        $sql = "SELECT 
+                    q.*, 
+                    COUNT(f.id) as feedback_count
+                FROM {$this->table} AS q
+                LEFT JOIN course_offerings AS co ON q.course_offering_id = co.id
+                LEFT JOIN feedbacks AS f ON q.id = f.questionnaire_id
+                WHERE 
+                    -- Case A: It's for an ACTIVE course offering they are teaching.
+                    (co.lecturer_id = :lecturer_id AND co.deleted_at IS NULL) 
+                    OR 
+                    -- Case B: It's a general template (no course offering) they personally created.
+                    (q.course_offering_id IS NULL AND q.created_by_user_id = :lecturer_id_alt)
+                GROUP BY q.id
+                ORDER BY q.created_at DESC
+                LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':lecturer_id', $lecturerId, \PDO::PARAM_INT);
+        $stmt->bindValue(':lecturer_id_alt', $lecturerId, \PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
+        return array_map(fn($row) => (new \Cfms\Models\Questionnaire())->toModel($row), $rows);
+    }
+
+    public function existsForCourseOffering(int $courseOfferingId): bool
+    {
+        $sql = "SELECT 1 FROM {$this->table} WHERE course_offering_id = ? AND deleted_at IS NULL LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$courseOfferingId]);
+        return (bool)$stmt->fetchColumn();
     }
 }

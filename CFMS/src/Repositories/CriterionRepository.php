@@ -8,11 +8,16 @@ class CriterionRepository extends BaseRepository
     protected string $table = 'criteria';
 
     /**
-     * Creates a new criterion record.
+     * Creates a new criterion record and returns it.
      */
-    public function createCriterion(array $data): int
+    public function createCriterion(array $data): ?Criterion
     {
-        return $this->insert($this->table, $data);
+        $id = $this->insert($this->table, $data);
+        if (!$id) {
+            return null;
+        }
+
+        return $this->findCriterionById($id);
     }
 
     /**
@@ -64,4 +69,17 @@ class CriterionRepository extends BaseRepository
 
         return $models;
     }
+
+
+    /**
+     * Updates a criterion and returns the updated model or null if failed.
+     */
+    public function updateCriterion(int $id,array $data): ?Criterion
+    {
+
+        $updated = $this->update($this->table, $data, $id);
+
+        return $updated ? $this->findCriterionById($id) : null;
+    }
+
 }

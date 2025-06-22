@@ -1,16 +1,21 @@
 <?php
 namespace Cfms\Services;
 
+use Cfms\Dto\CriterionGroupDto;
 use Cfms\Dto\PendingQuestionnaireDto;
+use Cfms\Dto\QuestionDto;
 use Cfms\Dto\QuestionnaireBasicDto;
+use Cfms\Dto\QuestionnaireWithDetailsDto;
+use Cfms\Dto\QuestionnaireWithGroupedCriteriaDto;
+use Cfms\KPI\KPIDto\CriterionPerformanceDto;
 use Cfms\Repositories\CourseOfferingRepository;
 use Cfms\Repositories\CourseRepository;
+use Cfms\Repositories\CriterionRepository;
 use Cfms\Repositories\FeedbackRepository;
 use Cfms\Repositories\QuestionnaireRepository;
 use Cfms\Repositories\QuestionRepository;
-use Cfms\Repositories\CriterionRepository;
-use Cfms\Dto\QuestionnaireWithDetailsDto;
-use Cfms\Dto\QuestionDto;
+use Cfms\Repositories\SemesterRepository;
+use Cfms\Repositories\UserRepository;
 use Dell\Cfms\Exceptions\AuthorizationException;
 
 class QuestionnaireService
@@ -26,8 +31,8 @@ class QuestionnaireService
         private FeedbackRepository $feedbackRepo,
         private CourseRepository $courseRepo,
         private StudentProfileService $studentProfileService,
-        private \Cfms\Repositories\UserRepository $userRepo,
-        private \Cfms\Repositories\SemesterRepository $semesterRepo
+        private UserRepository $userRepo,
+        private SemesterRepository $semesterRepo
     ) {}
 
     /**
@@ -37,6 +42,11 @@ class QuestionnaireService
 
     public function create(array $input, array $user): ?QuestionnaireWithDetailsDto
     {
+       /* if ($this->questionnaireRepo->existsForCourseOffering((int)$input['course_offering_id'])) {
+            // Use a specific exception here if you can
+            throw new \InvalidArgumentException("A questionnaire already exists for this course offering.");
+        }*/
+
 
         // Authorize the action first. This will throw an exception on failure.
         $this->authorizeQuestionnaireCreation($input, $user);
@@ -134,11 +144,18 @@ class QuestionnaireService
      * Private helper method to handle all authorization checks for creating a questionnaire.
      * Throws an AuthorizationException if the user is not permitted.
      */
+    // In Cfms/Services/QuestionnaireService.php
+
+    /**
+     * Private helper method to handle all authorization checks for creating a questionnaire.
+     * Throws an AuthorizationException if the user is not permitted.
+     */
     private function authorizeQuestionnaireCreation(array $input, array $user): void
     {
         $offeringId = $input['course_offering_id'] ?? null;
 
-        // THE FIX: Consistently use the 'role' key.
+
+        // THE FIX: Consistently use the 'role_id' key, not 'role'.
         $roleId = $user['role_id'] ?? null;
 
         if ($offeringId) {
@@ -150,11 +167,13 @@ class QuestionnaireService
             }
 
             // Admins (role 1) can proceed.
+            // Use the corrected variable $roleId
             if ($roleId == 1) {
                 return;
             }
 
             // Lecturers (role 2) must own the course offering.
+            // Use the corrected variable $roleId
             if ($roleId == 2) {
                 if ($this->courseOfferingRepo->isLecturerForOffering((int)$offeringId, $user['id'])) {
                     return; // Authorized
@@ -168,12 +187,12 @@ class QuestionnaireService
             // SCENARIO B: General/template questionnaire
 
             // Only administrators can create these.
+            // Use the corrected variable $roleId
             if ($roleId != 1) {
                 throw new AuthorizationException("Only administrators can create general questionnaires.");
             }
         }
     }
-
     public function getPaginated(int $page = 1, int $perPage = 15): array
     {
         $page = max(1, $page);
@@ -364,6 +383,134 @@ class QuestionnaireService
         ];
     }
 
+
+
+    /**
+     * Fetches a questionnaire, groups its questions by criteria,
+     * calculates the performance for each criterion, and computes an overall performance score.
+     */
+    public function getWithGroupedCriteriaAndPerformance(int $id): ?QuestionnaireWithGroupedCriteriaDto
+    {
+        // Part 1: Get base questionnaire and course offering details (re-used from getWithDetails)
+        $questionnaire = $this->questionnaireRepo->findQuestionnaireById($id);
+        if (!$questionnaire) {
+            return null;
+        }
+
+        // This logic to get course details is perfect, let's reuse it.
+        $courseOfferingDetails = null;
+        if ($questionnaire->course_offering_id) {
+            $offering = $this->courseOfferingRepo->findCourseOfferingById($questionnaire->course_offering_id);
+            if ($offering) {
+                $course = $this->courseRepo->getCourseById($offering->course_id);
+                $lecturer = $this->userRepo->getUserById($offering->lecturer_id);
+                $semester = $this->semesterRepo->findSemesterById($offering->semester_id);
+                $courseOfferingDetails = [
+                    'id' => $offering->id,
+                    'course' => $course ? ['id' => $course->id, 'course_code' => $course->course_code, 'course_title' => $course->course_title] : null,
+                    'lecturer' => $lecturer ? ['id' => $lecturer->id, 'full_name' => $lecturer->full_name] : null,
+                    'semester' => $semester ? ['id' => $semester->id, 'name' => $semester->name] : null
+                ];
+            }
+        }
+
+        // Part 2: Fetch all data needed for grouping and calculation in bulk for efficiency
+        $questions = $this->questionRepo->findByQuestionnaireId($id);
+
+        // Handle case with no questions. We must pass 0.0 for the overall performance.
+        if (empty($questions)) {
+            return new QuestionnaireWithGroupedCriteriaDto($questionnaire, [], 0.0, $courseOfferingDetails);
+        }
+
+        // Fetch all answers for the entire questionnaire in one go
+        $feedbackData = $this->feedbackRepo->findAnswersByQuestionnaireId($id);
+
+        $criteriaIds = array_unique(array_map(fn($q) => $q->criteria_id, $questions));
+        $criteria = !empty($criteriaIds) ? $this->criterionRepo->findCriterionByIds($criteriaIds) : [];
+        $criteriaById = array_column($criteria, null, 'id');
+
+        // Part 3: Process and group the data
+
+        // A. Map answers to their question ID for easy lookup
+        $answersByQuestionId = [];
+        foreach ($feedbackData as $answer) {
+            if (!isset($answersByQuestionId[$answer->question_id])) {
+                $answersByQuestionId[$answer->question_id] = [];
+            }
+            // Normalize score on-the-fly and store it
+            $score = 0;
+            if ($answer->question_type === 'rating') { // 0-5 scale
+                $score = (float)$answer->answer_value;
+            } elseif ($answer->question_type === 'slider') { // 0-100 scale
+                // Normalize to 0-5 scale
+                $score = (float)$answer->answer_value / 20.0;
+            }
+            $answersByQuestionId[$answer->question_id][] = $score;
+        }
+
+        // B. Group questions by their criterion ID
+        $questionsByCriterionId = [];
+        foreach ($questions as $question) {
+            if (!isset($questionsByCriterionId[$question->criteria_id])) {
+                $questionsByCriterionId[$question->criteria_id] = [];
+            }
+            $questionsByCriterionId[$question->criteria_id][] = $question;
+        }
+
+        // Part 4: Calculate performance and build the final DTOs
+
+        // --- NEW: Initialize variables for overall calculation ---
+        $grandTotalScore = 0.0;
+        $grandTotalAnswerCount = 0;
+
+        $criterionGroupDtos = [];
+        foreach ($questionsByCriterionId as $criterionId => $questionsInGroup) {
+            $criterion = $criteriaById[$criterionId] ?? null;
+            if (!$criterion) continue; // Skip if criterion not found
+
+            $criterionTotalScore = 0;
+            $criterionAnswerCount = 0;
+            $questionDtosInGroup = [];
+
+            foreach ($questionsInGroup as $question) {
+                // Add to the list of question DTOs for this group
+                $questionDtosInGroup[] = new QuestionDto($question, $criterion);
+
+                // Aggregate scores for performance calculation
+                if (isset($answersByQuestionId[$question->id])) {
+                    $questionScores = $answersByQuestionId[$question->id];
+                    $criterionTotalScore += array_sum($questionScores);
+                    $criterionAnswerCount += count($questionScores);
+                }
+            }
+
+            // --- NEW: Add the criterion's totals to the grand totals ---
+            $grandTotalScore += $criterionTotalScore;
+            $grandTotalAnswerCount += $criterionAnswerCount;
+
+            // Calculate the final performance for this criterion group (on a 0-5 scale)
+            $performance = ($criterionAnswerCount > 0) ? ($criterionTotalScore / $criterionAnswerCount) : 0.0;
+
+            // Create the group DTO and add it to our list
+            $criterionGroupDtos[] = new CriterionGroupDto($criterion, $performance, $questionDtosInGroup);
+        }
+
+        // --- NEW: Calculate the final overall performance ---
+        // 1. Calculate the overall average on the 0-5 scale
+        $overallPerformanceOn5 = ($grandTotalAnswerCount > 0) ? ($grandTotalScore / $grandTotalAnswerCount) : 0.0;
+
+        // 2. Convert the 0-5 score to a 0-100 percentage
+        $overallPerformancePercentage = $overallPerformanceOn5 * 20;
+
+
+        // Part 5: Assemble and return the final, rich DTO, passing in the new overall score
+        return new QuestionnaireWithGroupedCriteriaDto(
+            $questionnaire,
+            $criterionGroupDtos,
+            round($overallPerformancePercentage,2), // Pass the new value here
+            $courseOfferingDetails
+        );
+    }
 
 
 }

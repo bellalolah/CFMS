@@ -8,6 +8,9 @@ class Criterion implements Model
 {
     public ?int $id = null;
     public ?string $name = null;
+
+    public bool $isActive = true;
+    public ?float $weight = 0;
     public ?string $description = null;
     public ?string $created_at = null;
     public ?string $updated_at = null;
@@ -21,6 +24,8 @@ class Criterion implements Model
 
         $this->id = isset($data['id']) ? (int)$data['id'] : null;
         $this->name = $data['name'] ?? null;
+        $this->isActive = isset($data['isActive']) ? (bool)$data['isActive'] : null;
+        $this->weight = $data['weight'] ?? null;
         $this->description = $data['description'] ?? null;
         $this->created_at = $data['created_at'] ?? null;
         $this->updated_at = $data['updated_at'] ?? null;

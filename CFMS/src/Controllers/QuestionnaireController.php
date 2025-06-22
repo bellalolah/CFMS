@@ -159,4 +159,29 @@ class QuestionnaireController
 
         return JsonResponse::withJson($response, $result);
     }
+
+    // In your QuestionnaireController.php
+    public function getQuestionnaireWithGroupedCriteriaAndPerformance(Request $request, Response $response, array $args): Response
+    {
+        $id = (int)($args['id'] ?? 0);
+
+        try {
+            // Use the new service method
+            $questionnaireDto = $this->service->getWithGroupedCriteriaAndPerformance($id);
+
+            if (!$questionnaireDto) {
+                // Return a 404 Not Found response
+                //getQuestionnaireWithGroupedCriteriaAndPerformance
+                return JsonResponse::withJson($response, ['error' => 'Questionnaire not found'], 404);
+            }
+
+            // The toArray() method in the new DTOs will handle the conversion
+            return JsonResponse::withJson($response, $questionnaireDto->toArray());
+
+        } catch (\Exception $e) {
+            // Log the error and return a 500 server error
+            error_log($e->getMessage());
+            return JsonResponse::withJson($response,['error' => 'An unexpected error occurred'], 500);
+        }
+    }
 }

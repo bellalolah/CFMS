@@ -3,6 +3,7 @@
 namespace Cfms\KPI\Controllers;
 
 
+use Cfms\KPI\KPIDto\CriterionPerformanceDto;
 use Cfms\Utils\JsonResponse;
 use Dell\Cfms\KPI\Services\LecturerKPIService;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -89,5 +90,31 @@ class LecturerKPIController
             'feedbackText' => $dto->feedbackText,
             'rating' => $dto->overallRating,
         ],$data));
+    }
+
+    /**
+     * Endpoint to fetch data for the lecturer's performance chart.
+     */
+    public function getPerformanceChart(Request $request, Response $response): Response
+    {
+        $user = $request->getAttribute('user');
+        // Ensure the user is a lecturer
+        if ($user['role_id'] != 2) { // Assuming 2 is the lecturer role
+            return JsonResponse::withJson($response,['error' => 'Unauthorized'], 403);
+        }
+
+        try {
+            // Call the service method to get the DTOs
+            $chartDataDtos = $this->service->getLecturerPerformanceChartData($user['id']);
+
+            // Convert the array of DTOs into a simple array for the JSON response
+            $responseData = array_map(fn(CriterionPerformanceDto $dto) => $dto->toArray(), $chartDataDtos);
+
+            return JsonResponse::withJson($response, $responseData);
+
+        } catch (\Exception $e) {
+            error_log("Failed to get lecturer chart data: " . $e->getMessage());
+            return JsonResponse::withJson($response,['error' => 'Could not retrieve performance data'], 500);
+        }
     }
 }

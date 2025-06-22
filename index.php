@@ -75,7 +75,7 @@ $semesterRoutes($app);*/
 $sessionRoutes = require __DIR__ . '/CFMS/src/Routes/session.php';
 $sessionRoutes($app);
 
-$criterionRoutes = require __DIR__ . '/CFMS/src/Routes/criterias.php';
+$criterionRoutes = require __DIR__ . '/CFMS/src/Routes/criteria.php';
 $criterionRoutes($app);
 
 $questionnaireRoutes = require __DIR__ . '/CFMS/src/Routes/questionnaires.php';

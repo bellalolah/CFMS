@@ -54,4 +54,30 @@ class CriterionController
             return JsonResponse::withJson($response, ['error' => $e->getMessage()], 400);
         }
     }
+
+    public function update(Request $request, Response $response): Response
+    {
+        $user = $request->getAttribute('user');
+        $id = $request->getAttribute('id');
+
+        if (!$user || ($user['role_id'] ?? null) != 1) {
+            return JsonResponse::withJson($response, ['error' => 'Forbidden: Admins only'], 403);
+        }
+        $input = $request->getParsedBody();
+
+        if (!is_array($input)) {
+            $input = (array)$input;
+        }
+
+        try {
+            $criterion = $this->service->update($id,$input);
+            if ($criterion) {
+                return JsonResponse::withJson($response, (array)$criterion, 201);
+            }
+            return JsonResponse::withJson($response, ['error' => 'Failed to update criterion.'], 500);
+        }
+        catch (\InvalidArgumentException $e) {
+            return JsonResponse::withJson($response, ['error' => $e->getMessage()], 400);
+        }
+    }
 }

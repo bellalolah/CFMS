@@ -170,6 +170,7 @@ class CourseOfferingRepository extends BaseRepository
     // BaseRepository's findById already handles soft deletes, so these are fine.
     public function isLecturerForOffering(int $offeringId, int $lecturerId): bool
     {
+        error_log("Checking if lecturer $lecturerId is assigned to offering $offeringId");
         $row = $this->findById($this->table, $offeringId);
         return $row && $row->lecturer_id == $lecturerId;
     }
@@ -201,5 +202,28 @@ class CourseOfferingRepository extends BaseRepository
         $stmt->execute($indexedIds); // This is the changed line (was line 89)
 
         return $stmt->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Checks if a course is already assigned to ANY lecturer in a specific semester.
+     * Returns the lecturer_id if assigned, or null if not.
+     *
+     * @param int $courseId
+     * @param int $semesterId
+     * @return int|null The ID of the lecturer who is already assigned, or null.
+     */
+    public function getAssignedLecturerForCourseInSemester(int $courseId, int $semesterId): ?int
+    {
+        $sql = "SELECT lecturer_id FROM {$this->table} 
+                WHERE course_id = ? AND semester_id = ? AND deleted_at IS NULL 
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$courseId, $semesterId]);
+
+        $result = $stmt->fetchColumn();
+
+        // fetchColumn() returns false if no row is found, so we must handle that.
+        return $result !== false ? (int)$result : null;
     }
 }

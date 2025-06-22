@@ -50,13 +50,44 @@ class CourseOfferingService
         $this->sessionRepository = $sessionRepository;
     }
 
+    /**
+     * Creates a single course offering after validating the business rules.
+     *
+     * @param array $data
+     * @return int The ID of the new course offering.
+     * @throws \InvalidArgumentException If the business rules are violated.
+     */
     public function createCourseOffering(array $data): int
     {
-        // Validate lecturer_id is a lecturer
+        // Rule 1: Validate lecturer_id is a valid lecturer (your existing check)
         $lecturer = $this->userRepository->getUserById($data['lecturer_id'] ?? 0);
-        if (!$lecturer || ($lecturer->role_id ?? null) != 2) { // assuming 2 = lecturer
-            throw new \InvalidArgumentException('lecturer_id must be a valid lecturer user ID');
+        if (!$lecturer || ($lecturer->role_id ?? null) != 2) {
+            throw new \InvalidArgumentException('Invalid lecturer_id provided.');
         }
+
+        // --- START: NEW VALIDATION ---
+        // Rule 2: Check if this course is already assigned to someone else this semester.
+        $assignedLecturerId = $this->courseOfferingRepository->getAssignedLecturerForCourseInSemester(
+            $data['course_id'],
+            $data['semester_id']
+        );
+
+        if ($assignedLecturerId !== null) {
+            // A lecturer is already assigned. Is it the same one we are trying to assign now?
+            if ($assignedLecturerId !== (int)$data['lecturer_id']) {
+                // It's a different lecturer. Throw an error.
+                // Fetch the other lecturer's name for a better error message.
+                $otherLecturer = $this->userRepository->getUserById($assignedLecturerId);
+                $otherLecturerName = $otherLecturer ? $otherLecturer->full_name : "another lecturer (ID: {$assignedLecturerId})";
+                throw new \InvalidArgumentException("This course is already assigned to {$otherLecturerName} for this semester.");
+            } else {
+                // It's the same lecturer. This is a duplicate assignment.
+                throw new \InvalidArgumentException("This lecturer is already assigned to this course for this semester.");
+            }
+        }
+        // --- END: NEW VALIDATION ---
+
+        // If all checks pass, create the offering.
         return $this->courseOfferingRepository->createCourseOffering($data);
     }
 
@@ -70,7 +101,7 @@ class CourseOfferingService
         return $this->courseOfferingRepository->softDeleteBulkByCriteria([$id]);
     }
 
-   /* public function createBulkCourseOfferings(array $offerings): array
+    public function createBulkCourseOfferings(array $offerings): array
     {
         $results = [];
         foreach ($offerings as $data) {
@@ -86,7 +117,7 @@ class CourseOfferingService
             $results[] = $id;
         }
         return $results;
-    }*/
+    }
 
     public function getAllByLecturer(int $lecturerId): array
     {
@@ -172,44 +203,38 @@ class CourseOfferingService
 
     // In Cfms\Services\CourseOfferingService.php
 
-    public function createBulkCourseOfferings(array $offerings): array
+
+
+    /**
+     * Creates multiple course offerings, validating each one.
+     *
+     * @param array $offerings
+     * @return array A report of successful, failed, and duplicate creations.
+     */
+/*    public function createBulkCourseOfferings(array $offerings): array
     {
         $results = [
             'successful' => [],
-            'duplicates' => [],
             'errors' => []
         ];
 
         foreach ($offerings as $data) {
-            // A) Basic Validation
-            if (!isset($data['course_id'], $data['lecturer_id'], $data['semester_id'])) {
-                $results['errors'][] = ['error' => 'Missing required fields.', 'data' => $data];
-                continue;
-            }
-
-            // B) Check if lecturer is valid (your existing logic)
-            $lecturer = $this->userRepository->getUserById($data['lecturer_id']);
-            if (!$lecturer || ($lecturer->role_id ?? null) != 2) {
-                $results['errors'][] = ['error' => 'lecturer_id must be a valid lecturer user ID.', 'data' => $data];
-                continue;
-            }
-
-            // C) Check for Duplicates using our new method
-            if ($this->courseOfferingRepository->offeringExists($data['course_id'], $data['lecturer_id'], $data['semester_id'])) {
-                $results['duplicates'][] = $data;
-                continue; // Skip to the next item
-            }
-
-            // D) If not a duplicate, try to create it
             try {
-                $id = $this->courseOfferingRepository->createCourseOffering($data);
-                $data['id'] = $id; // Add the new ID to the successful data
+                // We can just call our single create method, which now contains all the logic.
+                // This avoids repeating code and ensures rules are always applied.
+                $newId = $this->createCourseOffering($data);
+                $data['id'] = $newId;
                 $results['successful'][] = $data;
-            } catch (\Exception $e) {
-                // Catch any other unexpected errors during creation
+
+            } catch (\InvalidArgumentException $e) {
+                // Catch the specific validation errors from our createCourseOffering method.
                 $results['errors'][] = ['error' => $e->getMessage(), 'data' => $data];
+            } catch (\Exception $e) {
+                // Catch any other unexpected database errors.
+                $results['errors'][] = ['error' => 'An unexpected server error occurred.', 'data' => $data];
             }
         }
         return $results;
-    }
+    }*/
+
 }
