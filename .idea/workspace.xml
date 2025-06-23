@@ -5,29 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ae00213-d4ff-4aaf-9ec8-6d8778477bd5" name="Changes" comment="added measuring lecturer performance">
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/CriterionGroupDto.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/Dto/QuestionnaireWithGroupedCriteriaDto.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CFMS/src/KPI/KPIDto/CriterionPerformanceDto.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/CriterionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Controllers/CriterionController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Controllers/QuestionnaireController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Controllers/QuestionnaireController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/KPI/Controllers/LecturerKPIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/KPI/Controllers/LecturerKPIController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/KPI/Services/LecturerKPIService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/KPI/Services/LecturerKPIService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Models/Criterion.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Models/Criterion.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CourseOfferingRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/CourseOfferingRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/CriterionRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/CriterionRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/FeedbackRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/FeedbackRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Repositories/QuestionnaireRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Repositories/QuestionnaireRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Routes/Kpi/lecturer_kpi.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Routes/Kpi/lecturer_kpi.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Routes/criterias.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Routes/criteria.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Routes/questionnaires.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Routes/questionnaires.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CourseOfferingService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/CourseOfferingService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CFMS/src/Services/CriterionService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/CriterionService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CFMS/src/Services/QuestionnaireService.php" beforeDir="false" afterPath="$PROJECT_DIR$/CFMS/src/Services/QuestionnaireService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/di-container.php" beforeDir="false" afterPath="$PROJECT_DIR$/di-container.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +125,8 @@
       <workItem from="1750359457739" duration="12754000" />
       <workItem from="1750375840491" duration="38476000" />
       <workItem from="1750595787132" duration="34000" />
-      <workItem from="1750595842993" duration="20674000" />
+      <workItem from="1750595842993" duration="25114000" />
+      <workItem from="1750657321726" duration="843000" />
     </task>
     <task id="LOCAL-00001" summary="added things.">
       <option name="closed" value="true" />
@@ -188,11 +168,30 @@
       <option name="project" value="LOCAL" />
       <updated>1750404008541</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added measuring lecturer performance">
+      <option name="closed" value="true" />
+      <created>1750630184235</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1750630184235</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update" />
