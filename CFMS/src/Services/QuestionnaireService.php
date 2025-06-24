@@ -391,13 +391,13 @@ class QuestionnaireService
      */
     public function getWithGroupedCriteriaAndPerformance(int $id): ?QuestionnaireWithGroupedCriteriaDto
     {
-        // Part 1: Get base questionnaire and course offering details (re-used from getWithDetails)
+       // Get base questionnaire and course offering details (re-used from getWithDetails)
         $questionnaire = $this->questionnaireRepo->findQuestionnaireById($id);
         if (!$questionnaire) {
             return null;
         }
 
-        // This logic to get course details is perfect, let's reuse it.
+        //  get course details is perfect, let's reuse it.
         $courseOfferingDetails = null;
         if ($questionnaire->course_offering_id) {
             $offering = $this->courseOfferingRepo->findCourseOfferingById($questionnaire->course_offering_id);
@@ -414,7 +414,7 @@ class QuestionnaireService
             }
         }
 
-        // Part 2: Fetch all data needed for grouping and calculation in bulk for efficiency
+        //  Fetch all data needed for grouping and calculation in bulk for efficiency
         $questions = $this->questionRepo->findByQuestionnaireId($id);
 
         // Handle case with no questions. We must pass 0.0 for the overall performance.
@@ -429,9 +429,9 @@ class QuestionnaireService
         $criteria = !empty($criteriaIds) ? $this->criterionRepo->findCriterionByIds($criteriaIds) : [];
         $criteriaById = array_column($criteria, null, 'id');
 
-        // Part 3: Process and group the data
+        //  Process and group the data
 
-        // A. Map answers to their question ID for easy lookup
+        //   Map answers to their question ID for easy lookup
         $answersByQuestionId = [];
         foreach ($feedbackData as $answer) {
             if (!isset($answersByQuestionId[$answer->question_id])) {
@@ -448,7 +448,7 @@ class QuestionnaireService
             $answersByQuestionId[$answer->question_id][] = $score;
         }
 
-        // B. Group questions by their criterion ID
+        //  Group questions by their criterion ID
         $questionsByCriterionId = [];
         foreach ($questions as $question) {
             if (!isset($questionsByCriterionId[$question->criteria_id])) {
@@ -457,9 +457,9 @@ class QuestionnaireService
             $questionsByCriterionId[$question->criteria_id][] = $question;
         }
 
-        // Part 4: Calculate performance and build the final DTOs
+        //  Calculate performance and build the final DTOs
 
-        // --- NEW: Initialize variables for overall calculation ---
+        //  Initialize variables for overall calculation ---
         $grandTotalScore = 0.0;
         $grandTotalAnswerCount = 0;
 
@@ -484,7 +484,7 @@ class QuestionnaireService
                 }
             }
 
-            // --- NEW: Add the criterion's totals to the grand totals ---
+            //  Add the criterion's totals to the grand totals ---
             $grandTotalScore += $criterionTotalScore;
             $grandTotalAnswerCount += $criterionAnswerCount;
 
@@ -495,15 +495,15 @@ class QuestionnaireService
             $criterionGroupDtos[] = new CriterionGroupDto($criterion, $performance, $questionDtosInGroup);
         }
 
-        // --- NEW: Calculate the final overall performance ---
-        // 1. Calculate the overall average on the 0-5 scale
+        //  Calculate the final overall performance ---
+        //  Calculate the overall average on the 0-5 scale
         $overallPerformanceOn5 = ($grandTotalAnswerCount > 0) ? ($grandTotalScore / $grandTotalAnswerCount) : 0.0;
 
-        // 2. Convert the 0-5 score to a 0-100 percentage
+        //  Convert the 0-5 score to a 0-100 percentage
         $overallPerformancePercentage = $overallPerformanceOn5 * 20;
 
 
-        // Part 5: Assemble and return the final, rich DTO, passing in the new overall score
+        //  Assemble and return the final, rich DTO, passing in the new overall score
         return new QuestionnaireWithGroupedCriteriaDto(
             $questionnaire,
             $criterionGroupDtos,
